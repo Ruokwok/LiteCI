@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{config.title}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8"/>
+  <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" />
+  <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script>
+  <script src="https://unpkg.com/jquery@3.7.0/dist/jquery.min.js"></script>
+  <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body class="mdui-theme-primary-indigo mdui-theme-accent-pink mdui-color-grey-200">
+<div class="mdui-toolbar mdui-color-theme mdui-shadow-3">
+  <span class="mdui-typo-title">LiteCI</span>
+</div>
+<div class="mdui-container mdui-typo">
+  <div class="=mdui-row">
+    <div class="mdui-col-sm-4 mdui-col-offset-sm-4">
+      <div class="mdui-card mdui-m-a-4 mdui-p-a-2">
+        <div class="mdui-typo-title mdui-text-color-theme mdui-text-center">{web.user.login}</div>
+        <div class="mdui-textfield mdui-textfield-floating-label mdui-m-t-0" id="i-user">
+          <i class="mdui-icon material-icons">person</i>
+          <label class="mdui-textfield-label">{web.username}</label>
+          <input class="mdui-textfield-input" type="text" id="username"/>
+          <div class="mdui-textfield-error">{web.login.fail}</div>
+        </div>
+        <div class="mdui-textfield mdui-textfield-floating-label mdui-m-t-0" id="i-pass">
+          <i class="mdui-icon material-icons">lock</i>
+          <label class="mdui-textfield-label">{web.password}</label>
+          <input class="mdui-textfield-input" type="password" id="password"/>
+        </div>
+        <button class="mdui-btn mdui-btn-block mdui-color-theme-accent mdui-m-t-2 mdui-shadow-2 mdui-ripple" onclick="login()">{web.login}</button>
+      </div>
+      <div class="mdui-typo-caption-opacity">Powered by LiteCI</div>
+    </div>
+  </div>
+</div>
+
+<div class="mdui-dialog mdui-typo mdui-row" id="loading">
+  <div class="mdui-center mdui-p-a-4">
+    <div class="mdui-progress">
+      <div class="mdui-progress-indeterminate"></div>
+    </div>
+    <div class="mdui-typo-subheading mdui-text-center" id="loading-text"></div>
+  </div>
+</div>
+
+</body>
+<script src="/js/liteci.js"></script>
+<script>
+  function login() {
+    showLoading('{web.logging.in}');
+    $('#i-user').removeClass('mdui-textfield-invalid');
+    var data = {};
+    data.params = {};
+    data.params.username = $('#username').val();
+    var password = $('#password').val();
+    var hash = CryptoJS.SHA256(CryptoJS.SHA256(data.params.username+password).toString()).toString();
+    var key = CryptoJS.MD5(hash).toString();
+    data.params.key = encrypt("login", key);
+    $.ajax({
+      type: 'POST',
+      url: '/api/login',
+      data: JSON.stringify(data),
+      success: function (json) { console.log(json)
+        if (json.params.status == 'success') {
+          localStorage.token = key;
+          localStorage.user = json.params.user;
+          setTimeout(()=>{goto('/')}, 200);
+        } else {
+          closeLoading();
+          $('#i-user').addClass('mdui-textfield-invalid');
+        }
+      },
+      dataType:"json",
+    });
+  }
+</script>
+</html>

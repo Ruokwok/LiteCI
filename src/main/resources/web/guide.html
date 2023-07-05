@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LiteCI | 安装引导</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8"/>
+    <title>Title</title>
+    <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" />
+    <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script>
+    <script src="https://unpkg.com/jquery@3.7.0/dist/jquery.min.js"></script>
+</head>
+<body class="mdui-theme-primary-indigo mdui-theme-accent-pink mdui-color-grey-200">
+<div class="mdui-toolbar mdui-color-theme mdui-shadow-3">
+    <span class="mdui-typo-title">LiteCI</span>
+</div>
+  <div class="mdui-container mdui-typo">
+    <div class="=mdui-row">
+        <div class="mdui-col-sm-4 mdui-col-offset-sm-4">
+            <div class="mdui-card mdui-p-a-2 mdui-m-a-1">
+                <div class="mdui-typo-title mdui-text-color-theme">LiteCI 安装引导</div>
+                <div class="mdui-typo-body-2 mdui-text-color-theme">LiteCI已经成功启动，接下来进行一些简单的设置。更多详细设置可在安装完成后进行。</div>
+            </div>
+            <div class="mdui-card mdui-m-a-1 mdui-p-a-2">
+                <div class="mdui-textfield mdui-textfield-floating-label mdui-m-t-0" id="i-port">
+                    <i class="mdui-icon material-icons">web</i>
+                    <label class="mdui-textfield-label">http端口</label>
+                    <input class="mdui-textfield-input" type="number" value="80" id="port"/>
+                    <div class="mdui-textfield-error">端口号不正确</div>
+                </div>
+                <div class="mdui-textfield mdui-textfield-floating-label mdui-m-t-0" id="i-title">
+                    <i class="mdui-icon material-icons">title</i>
+                    <label class="mdui-textfield-label">网站标题</label>
+                    <input class="mdui-textfield-input" type="text" value="LiteCI" id="title"/>
+                    <div class="mdui-textfield-error">不能为空</div>
+                </div>
+                <div class="mdui-textfield mdui-textfield-floating-label mdui-m-t-0" id="i-user">
+                    <i class="mdui-icon material-icons">person</i>
+                    <label class="mdui-textfield-label">管理员用户名</label>
+                    <input class="mdui-textfield-input" type="text" id="username"/>
+                    <div class="mdui-textfield-helper">此用户将拥有最高权限</div>
+                    <div class="mdui-textfield-error">不能为空</div>
+                </div>
+                <div class="mdui-textfield mdui-textfield-floating-label mdui-m-t-0" id="i-pass">
+                    <i class="mdui-icon material-icons">lock</i>
+                    <label class="mdui-textfield-label">密码</label>
+                    <input class="mdui-textfield-input" type="password" id="password"/>
+                    <div class="mdui-textfield-error">不能为空</div>
+                </div>
+                <button class="mdui-btn mdui-btn-block mdui-color-theme-accent mdui-m-t-2 mdui-shadow-2 mdui-ripple" onclick="save()">完成</button>
+            </div>
+            <div class="mdui-typo-caption-opacity">Powered by LiteCI</div>
+        </div>
+    </div>
+  </div>
+</body>
+<script>
+    function save() {
+        var data = {};
+        data.port = $('#port').val();
+        data.title = $('#title').val();
+        data.username = $('#username').val();
+        data.password = $('#password').val();console.log(data.port * 1)
+        if (!(/^[1-9]\d*$/.test(data.port) && 1 <= 1 * data.port && 1 * data.port <= 65535)){
+            $('#i-port').addClass("mdui-textfield-invalid");
+            return;
+        }
+        if (data.title == '') {
+            $('#i-title').addClass("mdui-textfield-invalid");
+            return;
+        }
+        if (data.username == '') {
+            $('#i-user').addClass("mdui-textfield-invalid");
+            return;
+        }
+        if (data.password == '') {
+            $('#i-pass').addClass("mdui-textfield-invalid");
+            return;
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/save',
+            data: JSON.stringify(data),
+            success: function (e) {
+                console.log(e);
+                if (e.trim() == "success") {
+                    mdui.dialog({
+                      title: '设置成功',
+                      content: '稍后请刷新页面',
+                      buttons: [
+                        {
+                          text: '刷新',
+                          onClick: function(inst){
+                            location.reload();
+                          }
+                        }
+                      ]
+                    });
+                } else {
+                    mdui.alert(e + '字段填写有误');
+                }
+            },
+        });
+        console.log(JSON.stringify(data))
+    }
+</script>
+</html>

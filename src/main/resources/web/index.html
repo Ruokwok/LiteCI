@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8"/>
+    <title>Title</title>
+    <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" />
+    <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script>
+    <script src="https://unpkg.com/jquery@3.7.0/dist/jquery.min.js"></script>
+    <script src="https://unpkg.com/crypto-js@3.1.9-1/crypto-js.js"></script>
+</head>
+<body class="mdui-drawer-body-left mdui-theme-primary-indigo mdui-theme-accent-pink mdui-color-grey-200">
+<div class="mdui-toolbar mdui-color-theme">
+    <a href="javascript:;" mdui-drawer="{target: '#drawer'}" class="mdui-btn mdui-btn-icon">
+        <i class="mdui-icon material-icons" >menu</i>
+    </a>
+    <span class="mdui-typo-title">{config.title}</span>
+    <div class="mdui-toolbar-spacer"></div>
+    <a href="javascript:userinfo();" class="mdui-btn mdui-btn-icon">
+        <i class="mdui-icon material-icons">account_circle</i>
+    </a>
+</div>
+
+<div class="mdui-drawer" id="drawer">
+    <ul class="mdui-list">
+        <li class="mdui-list-item mdui-ripple" onclick="goto('/')">
+            <i class="mdui-list-item-icon mdui-icon material-icons">dashboard</i>
+            <div class="mdui-list-item-content">{web.drawer.overview}</div>
+        </li>
+        <li class="mdui-list-item mdui-ripple">
+            <i class="mdui-list-item-icon mdui-icon material-icons">playlist_add</i>
+            <div class="mdui-list-item-content">{web.drawer.add}</div>
+        </li>
+        <li class="mdui-list-item mdui-ripple">
+            <i class="mdui-list-item-icon mdui-icon material-icons">person</i>
+            <div class="mdui-list-item-content">{web.drawer.user}</div>
+        </li>
+        <li class="mdui-list-item mdui-ripple">
+            <i class="mdui-list-item-icon mdui-icon material-icons">history</i>
+            <div class="mdui-list-item-content">{web.drawer.job.history}</div>
+        </li>
+        <br/>
+        <div>
+            <li class="mdui-subheader">{web.drawer.setting}</li>
+            <li class="mdui-list-item mdui-ripple" onclick="goto('/setting/theme')">
+                <i class="mdui-list-item-icon mdui-icon material-icons">settings</i>
+                <div class="mdui-list-item-content">{web.drawer.setting.theme}</div>
+            </li>
+            <li class="mdui-list-item mdui-ripple">
+                <i class="mdui-list-item-icon mdui-icon material-icons">settings</i>
+                <div class="mdui-list-item-content">{web.drawer.setting.job}</div>
+            </li>
+            <li class="mdui-list-item mdui-ripple">
+                <i class="mdui-list-item-icon mdui-icon material-icons">settings</i>
+                <div class="mdui-list-item-content">{web.drawer.setting.secure}</div>
+            </li>
+        </div>
+    </ul>
+</div>
+
+<div class="mdui-dialog mdui-typo mdui-row" id="loading">
+    <div class="mdui-center mdui-p-a-4">
+        <div class="mdui-progress">
+            <div class="mdui-progress-indeterminate"></div>
+        </div>
+        <div class="mdui-typo-subheading mdui-text-center" id="loading-text"></div>
+    </div>
+</div>
+
+<div class="mdui-container">
+{include.overview}
+</div>
+
+</body>
+<script src="/js/liteci.js"></script>
+</html>
