@@ -1,4 +1,4 @@
-var loadingTab = new mdui.Dialog('#loading', { destroyOnClosed: true, modal: true});
+var loadingTab = new mdui.Dialog('#loading', { destroyOnClosed: true, modal: true, history: false});
 
 function decrypt(text, key){
     var decrypted = CryptoJS.AES.decrypt(text, key, {});
@@ -20,5 +20,6 @@ function closeLoading() {
 }
 
 function goto(url) {
-    $(location).attr('href', url);
+//    $(location).attr('href', url);
+    window.location.href = url;
 }

@@ -19,6 +19,8 @@ public class ApiServlet extends ServerServlet {
 
     public static void _init() {
         map.put("/api/login", ApiServlet::login);
+        map.put("/api1/setting/theme/get", ApiServlet::getTheme);
+        map.put("/api1/setting/theme/set", ApiServlet::setTheme);
     }
 
     @Override
@@ -51,5 +53,24 @@ public class ApiServlet extends ServerServlet {
             j.params.put("status", "failed");
             resp.getWriter().println(j);
         }
+    }
+
+    public static void getTheme(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Json json = new Json();
+        resp.setStatus(200);
+        json.params.put("theme", LiteCI.serverConfig.theme);
+        json.params.put("accent", LiteCI.serverConfig.accent);
+        json.params.put("title", LiteCI.serverConfig.title);
+        resp.getWriter().println(json);
+    }
+
+    public static void setTheme(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Json json = new Gson().fromJson(str, Json.class);
+        LiteCI.serverConfig.title = json.params.get("title");
+        LiteCI.serverConfig.theme = json.params.get("theme");
+        LiteCI.serverConfig.accent = json.params.get("accent");
+        LiteCI.serverConfig.save();
+        LiteCI.init();
+        resp.getWriter().println("{}");
     }
 }

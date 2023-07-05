@@ -30,6 +30,8 @@ public class L {
             str = str.replaceAll(entry.getKey(), entry.getValue());
         }
         str = str.replaceAll("\\{config\\.title}", LiteCI.serverConfig.title);
+        str = str.replaceAll("\\{config\\.theme}", LiteCI.serverConfig.theme);
+        str = str.replaceAll("\\{config\\.accent    }", LiteCI.serverConfig.accent);
         return str;
     }
 

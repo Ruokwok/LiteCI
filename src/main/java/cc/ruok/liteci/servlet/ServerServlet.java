@@ -24,10 +24,11 @@ public class ServerServlet extends HttpServlet {
 
     public static void _init() {
         String html = getResourcesToString("index.html");
-        htmlMap.put("/", L.format(html.replace("{include.overview}", getResourcesToString("overview.html"))));
-        htmlMap.put("/setting/theme", L.format(html.replace("{include.overview}", getResourcesToString("setting-theme.html"))));
+        htmlMap.put("/", L.format(Format.res("overview", html)));
+        htmlMap.put("/setting/theme", L.format(Format.res("setting-theme", html)));
         htmlMap.put("/login", L.format(getResourcesToString("login.html")));
         htmlMap.put("/js/liteci.js", L.format(getResourcesToString("/js/liteci.js")));
+        htmlMap.put("/js/setting-theme.js", L.format(getResourcesToString("/js/setting-theme.js")));
         privateUrl.add("/");
         privateUrl.add("/setting/theme");
     }
@@ -36,7 +37,7 @@ public class ServerServlet extends HttpServlet {
         return LiteCI.class.getResourceAsStream("/web/" + path);
     }
 
-    protected static String getResourcesToString(String path) {
+    public static String getResourcesToString(String path) {
         try {
             return IOUtils.toString(getResources(path));
         } catch (IOException e) {
@@ -71,7 +72,7 @@ public class ServerServlet extends HttpServlet {
         }
     }
 
-    private boolean checkPermission(String url, String session) {
+    public static boolean checkPermission(String url, String session) {
         if (!privateUrl.contains(url)) return true;
         User user = LiteCI.getOnlineUser(session);
         if (user == null) return false;
