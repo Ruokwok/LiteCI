@@ -10,6 +10,8 @@ public class ServerConfig extends Config {
     public String title = "LiteCI";
     public String theme = "indigo";
     public String accent = "pink";
+    public int secure_level = 4;
+    public int task_count = 2;
 
     @Override
     public File getFile() {
