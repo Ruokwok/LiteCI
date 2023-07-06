@@ -1,6 +1,7 @@
 package cc.ruok.liteci.servlet;
 
 import cc.ruok.liteci.LiteCI;
+import cc.ruok.liteci.Project;
 import cc.ruok.liteci.User;
 import cc.ruok.liteci.i18n.L;
 import cc.ruok.liteci.json.DialogJson;
@@ -23,6 +24,7 @@ public class ApiServlet extends ServerServlet {
         map.put("/api/login", ApiServlet::login);
         map.put("/api1/setting/theme/get", ApiServlet::getTheme);
         map.put("/api1/setting/theme/set", ApiServlet::setTheme);
+        map.put("/api1/create/dir", ApiServlet::createDir);
     }
 
     @Override
@@ -75,5 +77,16 @@ public class ApiServlet extends ServerServlet {
         LiteCI.serverConfig.save();
         LiteCI.init();
         resp.getWriter().println(new DialogJson(L.get("set.save.success")));
+    }
+
+    public static void createDir(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Json json = new Gson().fromJson(str, Json.class);
+        String s = Project.createDir(json.params.get("path"), json.params.get("name"));
+        if (s != null) {
+            resp.getWriter().println(new DialogJson(s));
+        } else {
+            json.params.put("status", "success");
+            resp.getWriter().println(json);
+        }
     }
 }

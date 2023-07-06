@@ -1,0 +1,24 @@
+<div class="mdui-row mdui-typo mdui-p-t-4">
+  <div class="mdui-col-sm-6 mdui-col-offset-sm-3">
+    <div class="mdui-card mdui-p-a-3">
+      <div class="mdui-typo-title">{web.new.job}</div>
+      <div class="mdui-typo-subheading">{web.job.location}<code id="path"></code></div>
+      <div class="mdui-textfield">
+        <label class="mdui-textfield-label">{web.job.name}:</label>
+        <input class="mdui-textfield-input" type="text" id="name"/>
+      </div>
+      <div class="mdui-typo-title">{web.job.type}</div>
+      <label class="mdui-radio mdui-m-a-2">
+        <input type="radio" name="type" id="project" checked/>
+        <i class="mdui-radio-icon"></i>
+        {web.job.project}
+      </label>
+      <label class="mdui-radio mdui-m-a-2">
+        <input type="radio" name="type" id="dir"/>
+        <i class="mdui-radio-icon"></i>
+        {web.job.dir}
+      </label>
+      <button class="mdui-btn mdui-btn-block mdui-color-theme-accent mdui-m-t-2 mdui-shadow-2 mdui-ripple" onclick="create()">{web.ok}</button>
+    </div>
+  </div>
+</div>

@@ -23,3 +23,18 @@ function goto(url) {
 //    $(location).attr('href', url);
     window.location.href = url;
 }
+
+function asyncGoto(url) {
+    setTimeout(()=>{goto(url)}, 200);
+}
+
+function dialog(str) {
+mdui.dialog({
+    content: str,
+    buttons: [
+        {
+            text: 'OK',
+        }
+    ]
+});
+}

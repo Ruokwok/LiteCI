@@ -27,14 +27,17 @@ public class ServerServlet extends HttpServlet {
         htmlMap.put("/", L.format(Format.res("overview", html)));
         htmlMap.put("/setting/theme", L.format(Format.res("setting-theme", html)));
         htmlMap.put("/setting/build", L.format(Format.res("setting-build", html)));
+        htmlMap.put("/new-job", L.format(Format.res("new-job", html)));
         htmlMap.put("/login", L.format(getResourcesToString("login.html")));
         htmlMap.put("/js/liteci.js", L.format(getResourcesToString("/js/liteci.js")));
         htmlMap.put("/js/overview.js", L.format(getResourcesToString("/js/overview.js")));
         htmlMap.put("/js/setting-theme.js", L.format(getResourcesToString("/js/setting-theme.js")));
         htmlMap.put("/js/setting-build.js", L.format(getResourcesToString("/js/setting-build.js")));
+        htmlMap.put("/js/new-job.js", L.format(getResourcesToString("/js/new-job.js")));
         privateUrl.add("/");
         privateUrl.add("/setting/theme");
         privateUrl.add("/setting/build");
+        privateUrl.add("/new-job");
     }
 
     protected static InputStream getResources(String path) {

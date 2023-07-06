@@ -15,11 +15,13 @@ public class LiteCI {
     public static ServerConfig serverConfig;
     public static GuideServer guideServer;
     public static Map<String, User> userMap = new HashMap<>();
+    public static final File WORKSPACE = new File("workspace");
 
     public static void main(String[] args) throws Exception {
 //        BasicConfigurator.configure();
         File users = new File("users");
         if (!users.exists()) users.mkdir();
+        if (!WORKSPACE.exists()) WORKSPACE.mkdir();
         if (!ServerConfig.file.exists()) {
             guideServer = new GuideServer(80);
             guideServer.start();
