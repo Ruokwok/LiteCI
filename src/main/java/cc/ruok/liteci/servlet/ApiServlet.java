@@ -2,6 +2,8 @@ package cc.ruok.liteci.servlet;
 
 import cc.ruok.liteci.LiteCI;
 import cc.ruok.liteci.User;
+import cc.ruok.liteci.i18n.L;
+import cc.ruok.liteci.json.DialogJson;
 import cc.ruok.liteci.json.Json;
 import cn.hutool.crypto.SecureUtil;
 import com.github.mervick.aes_everywhere.Aes256;
@@ -31,6 +33,7 @@ public class ApiServlet extends ServerServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ApiHandler handler = map.get(req.getRequestURI());
+        resp.setCharacterEncoding("UTF-8");
         if (handler != null) handler.handler(req.getReader().readLine(), req, resp);
     }
 
@@ -71,6 +74,6 @@ public class ApiServlet extends ServerServlet {
         LiteCI.serverConfig.accent = json.params.get("accent");
         LiteCI.serverConfig.save();
         LiteCI.init();
-        resp.getWriter().println("{}");
+        resp.getWriter().println(new DialogJson(L.get("set.save.success")));
     }
 }

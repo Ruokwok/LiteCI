@@ -29,8 +29,17 @@ function save() {
             url: '/api1/setting/theme/set',
             data: JSON.stringify(data),
             success: function (json) {
-                closeLoading();
-                console.log(json);
+                closeLoading();console.log(json)
+                if (json.type == "dialog") {
+                    mdui.dialog({
+                      content: json.content,
+                      buttons: [
+                        {
+                          text: 'OK',
+                        }
+                      ]
+                    });
+                }
             },
             dataType:"json",
         });

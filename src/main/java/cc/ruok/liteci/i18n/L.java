@@ -25,9 +25,13 @@ public class L {
         }
     }
 
+    public static String get(String key) {
+        return lang.get(key);
+    }
+
     public static String format(String str) {
         for (Map.Entry<String, String> entry : lang.entrySet()) {
-            str = str.replaceAll(entry.getKey(), entry.getValue());
+            str = str.replaceAll("\\{" + entry.getKey() + "}", entry.getValue());
         }
         str = str.replaceAll("\\{config\\.title}", LiteCI.serverConfig.title);
         str = str.replaceAll("\\{config\\.theme}", LiteCI.serverConfig.theme);
@@ -56,7 +60,7 @@ public class L {
             if (value.equals("")) {
                 continue;
             }
-            d.put("\\{" + key + "}", value);
+            d.put(key, value);
         }
         return d;
     }
