@@ -1,12 +1,17 @@
 package cc.ruok.liteci.project;
 
+import cc.ruok.liteci.Logger;
+import cc.ruok.liteci.i18n.L;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Dir extends Project {
 
     public Dir(File file, Dir father) {
         super(file, father);
+        this.name = file.getName();
         File[] files = file.listFiles();
         if (files == null) return;
         internal = new ArrayList<>();
@@ -14,7 +19,12 @@ public class Dir extends Project {
             if (_file.isDirectory()) {
                 internal.add(new Dir(_file, this));
             } else {
-                internal.add(new Job(_file, this));
+                try {
+                    internal.add(new Job(_file, this));
+                } catch (Exception e) {
+                    Logger.warning(L.get("project.read.fail") + ": " + _file);
+                    e.printStackTrace();
+                }
             }
         }
     }

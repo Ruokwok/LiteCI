@@ -17,12 +17,14 @@ public class LiteCI {
     public static GuideServer guideServer;
     public static Map<String, User> userMap = new HashMap<>();
     public static final File JOBS = new File("jobs");
+    public static final File WORKSPACE = new File("workspace");
 
     public static void main(String[] args) throws Exception {
 //        BasicConfigurator.configure();
         File users = new File("users");
         if (!users.exists()) users.mkdir();
         if (!JOBS.exists()) JOBS.mkdir();
+        if (!WORKSPACE.exists()) WORKSPACE.mkdir();
         if (!ServerConfig.file.exists()) {
             guideServer = new GuideServer(80);
             guideServer.start();
@@ -34,10 +36,14 @@ public class LiteCI {
     }
 
     public static void init() {
-        L.load("chs");
-        ServerServlet._init();
-        ApiServlet._init();
-        Project.load();
+        try {
+            L.load("chs");
+            ServerServlet._init();
+            ApiServlet._init();
+            Project.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void addOnlineUser(User user) {

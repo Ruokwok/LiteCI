@@ -1,10 +1,13 @@
 package cc.ruok.liteci.project;
 
 import cc.ruok.liteci.LiteCI;
+import cc.ruok.liteci.config.JobConfig;
 import cc.ruok.liteci.i18n.L;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 public abstract class Project {
 
@@ -12,6 +15,7 @@ public abstract class Project {
     public Dir up;
     public File file;
     public List<Project> internal;
+    public String name;
 
     public static void load() {
         tree = new Dir(LiteCI.JOBS, null);
@@ -47,6 +51,25 @@ public abstract class Project {
         File file = new File(LiteCI.JOBS + path + "/" + name);
         if (file.exists()) return L.get("project.target.exists");
         file.mkdir();
+        return null;
+    }
+
+    public static String createJob(String path, String name) {
+        String s = checkPath(path, name);
+        if (s != null) return s;
+        File file = new File(LiteCI.JOBS + path + "/" + name);
+        if (file.exists()) return L.get("project.target.exists");
+        try {
+            file.createNewFile();
+            JobConfig jobConfig = new JobConfig(file);
+            jobConfig.name = name;
+            jobConfig.uuid = UUID.randomUUID().toString();
+            jobConfig.workspace = LiteCI.WORKSPACE + "/" + name + "_" + jobConfig.uuid;
+            new File(jobConfig.workspace).mkdir();
+            jobConfig.save();
+        } catch (Exception e) {
+            return L.get("project.target.write.fail");
+        }
         return null;
     }
 

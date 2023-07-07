@@ -26,4 +26,9 @@ public abstract class Config {
         return new Gson().fromJson(json, UserConfig.class);
     }
 
+    public static JobConfig loadJobConfig(File file) throws IOException {
+        String json = FileUtils.readFileToString(file, "utf8");
+        return new Gson().fromJson(json, JobConfig.class);
+    }
+
 }

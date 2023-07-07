@@ -38,3 +38,5 @@ web.job.location=项目位置
 project.path.null=目标路径不存在
 project.name.null=目标名称不正确
 project.target.exists=目标已存在
+project.target.write.fail=文件写入失败，请检查路径是否正确
+project.read.fail=读取项目失败，请检查配置文件
