@@ -1,7 +1,7 @@
 package cc.ruok.liteci.servlet;
 
 import cc.ruok.liteci.LiteCI;
-import cc.ruok.liteci.Project;
+import cc.ruok.liteci.project.Project;
 import cc.ruok.liteci.User;
 import cc.ruok.liteci.i18n.L;
 import cc.ruok.liteci.json.DialogJson;
@@ -22,6 +22,7 @@ public class ApiServlet extends ServerServlet {
 
     public static void _init() {
         map.put("/api/login", ApiServlet::login);
+        map.put("/api/jobs", ApiServlet::getJobs);
         map.put("/api1/setting/theme/get", ApiServlet::getTheme);
         map.put("/api1/setting/theme/set", ApiServlet::setTheme);
         map.put("/api1/create/dir", ApiServlet::createDir);
@@ -88,5 +89,10 @@ public class ApiServlet extends ServerServlet {
             json.params.put("status", "success");
             resp.getWriter().println(json);
         }
+    }
+
+    public static void getJobs(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Json json = new Gson().fromJson(str, Json.class);
+
     }
 }
