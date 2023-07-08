@@ -17,15 +17,17 @@ public abstract class Project {
     public File file;
     public Map<String, Project> internal;
     public String name;
+    public String path;
 
     public static void load() {
         tree = new Dir(LiteCI.JOBS, null);
-        System.out.println(tree);
+        tree.name = "/";
     }
 
     public Project(File file, Dir father) {
         this.file = file;
         this.up = father;
+        this.path = file.getPath().substring(4).replaceAll("\\\\", "/");
     }
 
     public abstract boolean isDir();
@@ -40,15 +42,22 @@ public abstract class Project {
         return file;
     }
 
+    public String getPath() {
+        return path;
+    }
+
     public static Project getRoot() {
         return tree;
     }
 
     public static Project getProject(String path) {
+        path = path.replaceAll("%20", " ");
         if (path.equals("/")) return tree;
+        if (path.startsWith("/")) path = path.substring(1);
         String[] p = path.split("/");
         Project project = tree;
         for (String f : p) {
+            f = f.replaceAll("\\+", " ");
             if (!project.isDir()) return null;
             if (!project.internal.containsKey(f)) return null;
             project = project.internal.get(f);
@@ -57,6 +66,7 @@ public abstract class Project {
     }
 
     public static String checkPath(String path, String name) {
+        path = path.replaceAll("%20", " ");
         if (path == null || path.isEmpty()) return L.get("project.path.null");
         if (name == null || name.isEmpty()) return L.get("project.name.null");
         File file = new File(LiteCI.JOBS + path);
@@ -65,6 +75,7 @@ public abstract class Project {
     }
 
     public static String createDir(String path, String name) {
+        path = path.replaceAll("%20", " ");
         String s = checkPath(path, name);
         if (s != null) return s;
         File file = new File(LiteCI.JOBS + path + "/" + name);
@@ -76,6 +87,7 @@ public abstract class Project {
     }
 
     public static String createJob(String path, String name) {
+        path = path.replaceAll("%20", " ");
         String s = checkPath(path, name);
         if (s != null) return s;
         File file = new File(LiteCI.JOBS + path + "/" + name);

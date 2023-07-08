@@ -118,6 +118,9 @@ public class ApiServlet extends ServerServlet {
         Project project = Project.getProject(json.params.get("path"));
         if (project.isDir()) {
             JobListJson list = new JobListJson();
+            if (project.getUp() != null) {
+                list.father = project.getUp().getPath();
+            }
             if (json.params.get("path").equals("/")) {
                 list.description = LiteCI.getDescription();
             }

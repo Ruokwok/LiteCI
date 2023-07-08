@@ -4,6 +4,7 @@ import cc.ruok.liteci.LiteCI;
 import cc.ruok.liteci.User;
 import cc.ruok.liteci.i18n.Format;
 import cc.ruok.liteci.i18n.L;
+import cc.ruok.liteci.project.Project;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ public class ServerServlet extends HttpServlet {
         htmlMap.put("/", L.format(Format.res("overview", html)));
         htmlMap.put("/setting/theme", L.format(Format.res("setting-theme", html)));
         htmlMap.put("/setting/build", L.format(Format.res("setting-build", html)));
+        htmlMap.put("/job/dir", L.format(Format.res("dir", html)));
         htmlMap.put("/new-job", L.format(Format.res("new-job", html)));
         htmlMap.put("/login", L.format(getResourcesToString("login.html")));
         htmlMap.put("/js/liteci.js", L.format(getResourcesToString("/js/liteci.js")));
@@ -34,10 +36,12 @@ public class ServerServlet extends HttpServlet {
         htmlMap.put("/js/setting-theme.js", L.format(getResourcesToString("/js/setting-theme.js")));
         htmlMap.put("/js/setting-build.js", L.format(getResourcesToString("/js/setting-build.js")));
         htmlMap.put("/js/new-job.js", L.format(getResourcesToString("/js/new-job.js")));
+        htmlMap.put("/js/dir.js", L.format(getResourcesToString("/js/dir.js")));
         privateUrl.add("/");
         privateUrl.add("/setting/theme");
         privateUrl.add("/setting/build");
         privateUrl.add("/new-job");
+        privateUrl.add("/job");
     }
 
     protected static InputStream getResources(String path) {
@@ -58,7 +62,19 @@ public class ServerServlet extends HttpServlet {
         String html = htmlMap.get(path);
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("text/html");
-        if (checkPermission(path, req.getSession().getId())) {
+        if (path.startsWith("/job")) {
+            if (checkPermission("/job", req.getSession().getId())) {
+                Project project = Project.getProject(path.substring(5));
+                if (project != null && project.isDir()) {
+                    String jhtml = htmlMap.get("/job/dir");
+                    resp.setStatus(200);
+                    resp.getWriter().println(jhtml);
+                }
+            } else {
+                resp.setStatus(200);
+                resp.getWriter().println(redirect("/login"));
+            }
+        } else if (checkPermission(path, req.getSession().getId())) {
             if (html != null) {
                 resp.setStatus(200);
                 resp.getWriter().println(html);

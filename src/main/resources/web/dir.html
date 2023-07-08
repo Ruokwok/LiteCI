@@ -1,0 +1,25 @@
+<div class="mdui-row mdui-typo mdui-p-t-4">
+    <div class="mdui-col-sm-12 mdui-col-offset-sm-0">
+        <div class="mdui-card mdui-typo-subheading mdui-p-a-2 mdui-m-b-2" id="description" style="display: none">
+        </div>
+        <div class="mdui-table-fluid">
+            <table class="mdui-table mdui-table-hoverable">
+                <thead>
+                <tr>
+                    <th>State</th>
+                    <th>Item</th>
+                    <th>{web.last.success}</th>
+                    <th>{web.last.fail}</th>
+                    <th>{web.last.time}</th>
+                    <th>{web.operation}</th>
+                </tr>
+                </thead>
+                <div class="mdui-progress" id="job-loading">
+                    <div class="mdui-progress-indeterminate"></div>
+                </div>
+                <tbody id="job-list">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

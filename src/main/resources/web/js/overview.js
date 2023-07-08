@@ -11,7 +11,6 @@ function update() {
         url: '/api/jobs',
         data: JSON.stringify(data),
         success: function (json) {
-            closeLoading();
             if (json.description != '' && json.description != undefined) {
                 $("#description").text(json.description);
                 $("#description").show();
@@ -19,7 +18,11 @@ function update() {
             $("#job-loading").hide();
             console.log(json);
             for (i in json.list) {
-                $('#job-list').append('<tr><td>' + getIcon(json.list[i]) + '</td><td>' + json.list[i].name + '</td><td>' + json.list[i].last_success + '</td><td>' + json.list[i].last_fail + '</td><td>' + json.list[i].last_time + '</td><td><i class="mdui-icon material-icons">play</i></td></tr>');
+                if (json.list[i].is_dir) {
+                    $('#job-list').append('<tr onclick="goto(\'/job/' + json.list[i].name + '\')")><td>' + getIcon(json.list[i]) + '</td><td>' + json.list[i].name + '</td><td>{web.none}</td><td>{web.none}</td><td>{web.none}</td><td><i class="mdui-icon material-icons">play</i></td></tr>');
+                } else {
+                    $('#job-list').append('<tr onclick="goto(\'/job/' + json.list[i].name + '\')")><td>' + getIcon(json.list[i]) + '</td><td>' + json.list[i].name + '</td><td>' + json.list[i].last_success + '</td><td>' + json.list[i].last_fail + '</td><td>' + json.list[i].last_time + '</td><td><i class="mdui-icon material-icons">play</i></td></tr>');
+                }
             }
         },
         dataType:"json",

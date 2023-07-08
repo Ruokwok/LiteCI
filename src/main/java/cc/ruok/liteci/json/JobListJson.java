@@ -6,6 +6,7 @@ public class JobListJson extends Json {
 
     public List<Job> list;
     public String description;
+    public String father;
 
     public static class Job {
 
