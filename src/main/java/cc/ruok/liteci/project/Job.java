@@ -24,4 +24,8 @@ public class Job extends Project {
     public JobConfig getConfig() {
         return config;
     }
+
+    public void save() throws IOException {
+        config.save();
+    }
 }

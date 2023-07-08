@@ -5,6 +5,7 @@ import cc.ruok.liteci.config.JobConfig;
 import cc.ruok.liteci.i18n.L;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
@@ -91,6 +92,25 @@ public abstract class Project {
             return L.get("project.target.write.fail");
         }
         return null;
+    }
+
+    public static void saveDir(Dir dir) {
+        for (Map.Entry<String, Project> entry : dir.internal.entrySet()) {
+            if (entry.getValue() instanceof Job) {
+                try {
+                    ((Job) entry.getValue()).save();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (entry.getValue() instanceof Dir) {
+                saveDir((Dir) entry.getValue());
+            }
+        }
+    }
+
+    public static void saveAll() {
+        saveDir(tree);
     }
 
 }

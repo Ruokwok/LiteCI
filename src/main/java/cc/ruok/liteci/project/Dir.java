@@ -5,6 +5,7 @@ import cc.ruok.liteci.i18n.L;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Dir extends Project {
 
@@ -32,5 +33,9 @@ public class Dir extends Project {
     @Override
     public boolean isDir() {
         return true;
+    }
+
+    public Map<String, Project> getSons() {
+        return internal;
     }
 }
