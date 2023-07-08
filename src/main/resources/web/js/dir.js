@@ -14,6 +14,8 @@ function update() {
         data: JSON.stringify(data),
         success: function (json) {
             up_path = json.father;
+            $('#name').text(json.name);
+            $('title').text('{config.title} | ' + json.name);
             if (json.description != '' && json.description != undefined) {
                 $("#description").text(json.description);
                 $("#description").show();

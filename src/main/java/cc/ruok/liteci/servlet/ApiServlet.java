@@ -125,6 +125,7 @@ public class ApiServlet extends ServerServlet {
                 list.description = LiteCI.getDescription();
             }
             list.list = new LinkedList<>();
+            list.name = project.name;
             for (Map.Entry<String, Project> entry : project.internal.entrySet()) {
                 try {
                     if (entry.getValue() instanceof Dir) {
