@@ -16,6 +16,7 @@ public class JobConfig extends Config {
     public long last_fail;
     public int status;
     public String workspace;
+    public String description = "";
 
     public JobConfig(File file) {
         this.file = file;

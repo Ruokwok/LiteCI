@@ -9,6 +9,7 @@ function update() {
 //            closeLoading();
             console.log(json);
             $('#title').val(json.params.title);
+            $('#docs').val(json.params.description);
             $('#t-' + json.params.theme).prop('checked', true);
             $('#a-' + json.params.accent).prop('checked', true);
         },
@@ -20,6 +21,7 @@ function save() {
     var data = {};
     data.params = {};
     data.params.title = $("#title").val();
+    data.params.description = $("#docs").val();
     data.params.theme = $('input[name="theme"]:radio').filter(":checked").attr("id").slice(2);
     data.params.accent = $('input[name="accent"]:radio').filter(":checked").attr("id").slice(2);
     console.log(data)

@@ -21,6 +21,11 @@ public class Job extends Project {
         return false;
     }
 
+    @Override
+    public String getDescription() {
+        return config.description;
+    }
+
     public JobConfig getConfig() {
         return config;
     }

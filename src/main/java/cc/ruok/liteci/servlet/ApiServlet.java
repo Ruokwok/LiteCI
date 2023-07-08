@@ -74,6 +74,7 @@ public class ApiServlet extends ServerServlet {
         json.params.put("theme", LiteCI.serverConfig.theme);
         json.params.put("accent", LiteCI.serverConfig.accent);
         json.params.put("title", LiteCI.serverConfig.title);
+        json.params.put("description", LiteCI.getDescription());
         resp.getWriter().println(json);
     }
 
@@ -83,6 +84,9 @@ public class ApiServlet extends ServerServlet {
         LiteCI.serverConfig.theme = json.params.get("theme");
         LiteCI.serverConfig.accent = json.params.get("accent");
         LiteCI.serverConfig.save();
+        if (json.params.get("description") != null && !json.params.get("description").isEmpty()) {
+            LiteCI.setDescription(json.params.get("description"));
+        }
         LiteCI.init();
         resp.getWriter().println(new DialogJson(L.get("set.save.success")));
     }
@@ -112,6 +116,9 @@ public class ApiServlet extends ServerServlet {
     public static void getJobs(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Json json = new Gson().fromJson(str, Json.class);
         Project project = Project.getProject(json.params.get("path"));
+        if (json.params.get("path").equals("/")) {
+
+        }
         if (project.isDir()) {
             JobListJson list = new JobListJson();
             list.list = new LinkedList<>();

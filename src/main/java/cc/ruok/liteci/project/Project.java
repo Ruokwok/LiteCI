@@ -1,6 +1,7 @@
 package cc.ruok.liteci.project;
 
 import cc.ruok.liteci.LiteCI;
+import cc.ruok.liteci.config.Description;
 import cc.ruok.liteci.config.JobConfig;
 import cc.ruok.liteci.i18n.L;
 
@@ -28,6 +29,8 @@ public abstract class Project {
     }
 
     public abstract boolean isDir();
+
+    public abstract String getDescription();
 
     public Dir getUp() {
         return up;

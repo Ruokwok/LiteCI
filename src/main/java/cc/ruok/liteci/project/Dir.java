@@ -1,6 +1,7 @@
 package cc.ruok.liteci.project;
 
 import cc.ruok.liteci.Logger;
+import cc.ruok.liteci.config.Description;
 import cc.ruok.liteci.i18n.L;
 
 import java.io.File;
@@ -9,13 +10,17 @@ import java.util.Map;
 
 public class Dir extends Project {
 
+    public Description description;
+
     public Dir(File file, Dir father) {
         super(file, father);
         this.name = file.getName();
+        this.description = new Description(file + "/.description");
         File[] files = file.listFiles();
         if (files == null) return;
         internal = new HashMap<>();
         for (File _file : files) {
+            if (_file.getName().equals(".description")) return;
             if (_file.isDirectory()) {
                 internal.put(_file.getName(), new Dir(_file, this));
             } else {
@@ -33,6 +38,11 @@ public class Dir extends Project {
     @Override
     public boolean isDir() {
         return true;
+    }
+
+    @Override
+    public String getDescription() {
+        return description.toString();
     }
 
     public Map<String, Project> getSons() {
