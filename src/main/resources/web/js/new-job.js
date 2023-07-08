@@ -17,7 +17,13 @@ function create() {
         success: function (json) {
         closeLoading();
             if (json.params.status == 'success') {
-                asyncGoto('/');
+                if (t == "dir") {
+                    if (localStorage.path == "/") {
+                        asyncGoto('/');
+                    } else {
+                        asyncGoto('/job' + localStorage.path);
+                    }
+                }
             } else {
                 dialog(json.content);
             }
