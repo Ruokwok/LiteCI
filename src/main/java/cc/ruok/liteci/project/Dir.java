@@ -4,8 +4,7 @@ import cc.ruok.liteci.Logger;
 import cc.ruok.liteci.i18n.L;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Dir extends Project {
 
@@ -14,13 +13,14 @@ public class Dir extends Project {
         this.name = file.getName();
         File[] files = file.listFiles();
         if (files == null) return;
-        internal = new ArrayList<>();
+        internal = new HashMap<>();
         for (File _file : files) {
             if (_file.isDirectory()) {
-                internal.add(new Dir(_file, this));
+                internal.put(_file.getName(), new Dir(_file, this));
             } else {
                 try {
-                    internal.add(new Job(_file, this));
+                    Job job = new Job(_file, this);
+                    internal.put(job.name, job);
                 } catch (Exception e) {
                     Logger.warning(L.get("project.read.fail") + ": " + _file);
                     e.printStackTrace();

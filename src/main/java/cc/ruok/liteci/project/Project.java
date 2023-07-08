@@ -5,8 +5,7 @@ import cc.ruok.liteci.config.JobConfig;
 import cc.ruok.liteci.i18n.L;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public abstract class Project {
@@ -14,7 +13,7 @@ public abstract class Project {
     public static Dir tree;
     public Dir up;
     public File file;
-    public List<Project> internal;
+    public Map<String, Project> internal;
     public String name;
 
     public static void load() {
@@ -37,6 +36,22 @@ public abstract class Project {
         return file;
     }
 
+    public static Project getRoot() {
+        return tree;
+    }
+
+    public static Project getProject(String path) {
+        if (path.equals("/")) return tree;
+        String[] p = path.split("/");
+        Project project = tree;
+        for (String f : p) {
+            if (!project.isDir()) return null;
+            if (!project.internal.containsKey(f)) return null;
+            project = project.internal.get(f);
+        }
+        return project;
+    }
+
     public static String checkPath(String path, String name) {
         if (path == null || path.isEmpty()) return L.get("project.path.null");
         if (name == null || name.isEmpty()) return L.get("project.name.null");
@@ -51,6 +66,8 @@ public abstract class Project {
         File file = new File(LiteCI.JOBS + path + "/" + name);
         if (file.exists()) return L.get("project.target.exists");
         file.mkdir();
+        Project up = getProject(path);
+        if (up != null) up.internal.put(name, new Dir(file, (Dir) up));
         return null;
     }
 
@@ -67,6 +84,9 @@ public abstract class Project {
             jobConfig.workspace = LiteCI.WORKSPACE + "/" + name + "_" + jobConfig.uuid;
             new File(jobConfig.workspace).mkdir();
             jobConfig.save();
+            Project up = getProject(path);
+            Job job = new Job(file, (Dir) up);
+            if (up != null) up.internal.put(name, job);
         } catch (Exception e) {
             return L.get("project.target.write.fail");
         }

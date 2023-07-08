@@ -1,6 +1,9 @@
 package cc.ruok.liteci.servlet;
 
 import cc.ruok.liteci.LiteCI;
+import cc.ruok.liteci.json.JobListJson;
+import cc.ruok.liteci.project.Dir;
+import cc.ruok.liteci.project.Job;
 import cc.ruok.liteci.project.Project;
 import cc.ruok.liteci.User;
 import cc.ruok.liteci.i18n.L;
@@ -14,7 +17,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 public class ApiServlet extends ServerServlet {
 
@@ -105,6 +111,34 @@ public class ApiServlet extends ServerServlet {
 
     public static void getJobs(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Json json = new Gson().fromJson(str, Json.class);
-
+        Project project = Project.getProject(json.params.get("path"));
+        if (project.isDir()) {
+            JobListJson list = new JobListJson();
+            list.list = new LinkedList<>();
+            for (Map.Entry<String, Project> entry : project.internal.entrySet()) {
+                try {
+                    if (entry.getValue() instanceof Dir) {
+                        JobListJson.Job j = new JobListJson.Job();
+                        j.is_dir = true;
+                        j.name = entry.getKey();
+                        list.list.add(j);
+                    }
+                    if (entry.getValue() instanceof Job) {
+                        Job job = (Job) entry.getValue();
+                        JobListJson.Job j = new JobListJson.Job();
+                        j.is_dir = false;
+                        j.name = job.name;
+                        j.last_success = job.getConfig().last_success;
+                        j.last_fail = job.getConfig().last_fail;
+                        j.last_time = job.getConfig().last_time;
+                        j.status = job.getConfig().status;
+                        list.list.add(j);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            resp.getWriter().println(list);
+        }
     }
 }
