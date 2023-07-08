@@ -12,6 +12,10 @@ function update() {
         data: JSON.stringify(data),
         success: function (json) {
             closeLoading();
+            if (json.description != '' && json.description != undefined) {
+                $("#description").text(json.description);
+                $("#description").show();
+            }
             $("#job-loading").hide();
             console.log(json);
             for (i in json.list) {

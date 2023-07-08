@@ -116,11 +116,11 @@ public class ApiServlet extends ServerServlet {
     public static void getJobs(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Json json = new Gson().fromJson(str, Json.class);
         Project project = Project.getProject(json.params.get("path"));
-        if (json.params.get("path").equals("/")) {
-
-        }
         if (project.isDir()) {
             JobListJson list = new JobListJson();
+            if (json.params.get("path").equals("/")) {
+                list.description = LiteCI.getDescription();
+            }
             list.list = new LinkedList<>();
             for (Map.Entry<String, Project> entry : project.internal.entrySet()) {
                 try {
