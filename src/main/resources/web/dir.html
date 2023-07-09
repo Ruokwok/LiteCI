@@ -1,7 +1,17 @@
 <div class="mdui-row mdui-typo mdui-p-t-4">
     <div class="mdui-col-sm-12 mdui-col-offset-sm-0">
-        <div class="mdui-typo-title mdui-m-b-2" id="name"></div>
-        <div class="mdui-card mdui-typo-subheading mdui-p-a-2 mdui-m-b-2" id="description" style="display: none">
+        <div class="mdui-typo-title mdui-m-b-2">
+            <text id="name"></text>
+            <button class="mdui-btn mdui-color-theme-accent mdui-shadow-2 mdui-ripple mdui-float-right" onclick="edit()" id="btn">{web.edit.description}</button>
+        </div>
+        <div class="mdui-card mdui-m-b-2 mdui-p-l-3 mdui-p-r-3" style="display: none" id="edit">
+            <div class="mdui-textfield mdui-textfield-floating-label mdui-m-t-0">
+                <label class="mdui-textfield-label">{web.description}</label>
+                <textarea class="mdui-textfield-input" rows="8" id="docs"></textarea>
+            </div>
+            <button class="mdui-btn mdui-color-theme-accent mdui-ripple mdui-shadow-2 mdui-m-b-2" onclick="save()">{set.save}</button>
+        </div>
+        <div class="mdui-typo-subheading mdui-m-b-2" id="description" style="display: none">
         </div>
         <div class="mdui-table-fluid">
             <table class="mdui-table mdui-table-hoverable">

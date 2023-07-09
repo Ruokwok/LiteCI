@@ -12,7 +12,7 @@ function update() {
         data: JSON.stringify(data),
         success: function (json) {
             if (json.description != '' && json.description != undefined) {
-                $("#description").text(json.description);
+                $("#description").html(json.description);
                 $("#description").show();
             }
             $("#job-loading").hide();

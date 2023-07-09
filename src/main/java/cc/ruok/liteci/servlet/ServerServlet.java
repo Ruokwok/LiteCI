@@ -29,6 +29,7 @@ public class ServerServlet extends HttpServlet {
         htmlMap.put("/setting/theme", L.format(Format.res("setting-theme", html)));
         htmlMap.put("/setting/build", L.format(Format.res("setting-build", html)));
         htmlMap.put("/job/dir", L.format(Format.res("dir", html)));
+        htmlMap.put("/edit/dir", L.format(Format.res("edit-dir", html)));
         htmlMap.put("/new-job", L.format(Format.res("new-job", html)));
         htmlMap.put("/login", L.format(getResourcesToString("login.html")));
         htmlMap.put("/js/liteci.js", L.format(getResourcesToString("/js/liteci.js")));
@@ -42,6 +43,7 @@ public class ServerServlet extends HttpServlet {
         privateUrl.add("/setting/build");
         privateUrl.add("/new-job");
         privateUrl.add("/job");
+        privateUrl.add("/edit");
     }
 
     protected static InputStream getResources(String path) {
@@ -70,7 +72,19 @@ public class ServerServlet extends HttpServlet {
                     resp.setStatus(200);
                     resp.getWriter().println(jhtml);
                 }
-            } else {
+            } else  {
+                resp.setStatus(200);
+                resp.getWriter().println(redirect("/login"));
+            }
+        } else if (path.startsWith("/edit")) {
+            if (checkPermission("/edit", req.getSession().getId())) {
+                Project project = Project.getProject(path.substring(5));
+                if (project != null && project.isDir()) {
+                    String jhtml = htmlMap.get("/edit/dir");
+                    resp.setStatus(200);
+                    resp.getWriter().println(jhtml);
+                }
+            } else  {
                 resp.setStatus(200);
                 resp.getWriter().println(redirect("/login"));
             }

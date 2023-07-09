@@ -15,7 +15,7 @@ public class Dir extends Project {
     public Dir(File file, Dir father) {
         super(file, father);
         this.name = file.getName();
-        this.description = new Description(file + "/.description");
+        if (!file.getPath().equals("jobs")) this.description = new Description(new File(file + "/.description"));
         File[] files = file.listFiles();
         if (files == null) return;
         internal = new HashMap<>();
@@ -42,6 +42,7 @@ public class Dir extends Project {
 
     @Override
     public String getDescription() {
+        if (description == null) return "";
         return description.toString();
     }
 

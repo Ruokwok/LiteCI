@@ -17,16 +17,17 @@ function update() {
             $('#name').text(json.name);
             $('title').text('{config.title} | ' + json.name);
             if (json.description != '' && json.description != undefined) {
-                $("#description").text(json.description);
+                $("#description").html(json.description);
+                $("#docs").val(json.description);
                 $("#description").show();
             }
             $("#job-loading").hide();
             console.log(json);
             for (i in json.list) {
                 if (json.list[i].is_dir) {
-                    $('#job-list').append('<tr onclick="goto(\'' + window.location.pathname + '/' + json.list[i].name + '\')")><td>' + getIcon(json.list[i]) + '</td><td>' + json.list[i].name + '</td><td>{web.none}</td><td>{web.none}</td><td>{web.none}</td><td><i class="mdui-icon material-icons">play</i></td></tr>');
+                    $('#job-list').append('<tr onclick="goto(\'' + window.location.pathname + '/' + json.list[i].name + '\')")><td>' + getIcon(json.list[i]) + '</td><td>' + json.list[i].name.replace(' ', '&nbsp;') + '</td><td>{web.none}</td><td>{web.none}</td><td>{web.none}</td><td><i class="mdui-icon material-icons">play</i></td></tr>');
                 } else {
-                    $('#job-list').append('<tr onclick="goto(\'' + window.location.pathname + '/' + json.list[i].name + '\')")><td>' + getIcon(json.list[i]) + '</td><td>' + json.list[i].name + '</td><td>' + json.list[i].last_success + '</td><td>' + json.list[i].last_fail + '</td><td>' + json.list[i].last_time + '</td><td><i class="mdui-icon material-icons">play</i></td></tr>');
+                    $('#job-list').append('<tr onclick="goto(\'' + window.location.pathname + '/' + json.list[i].name + '\')")><td>' + getIcon(json.list[i]) + '</td><td>' + json.list[i].name.replace(' ', '&nbsp;') + '</td><td>' + json.list[i].last_success + '</td><td>' + json.list[i].last_fail + '</td><td>' + json.list[i].last_time + '</td><td><i class="mdui-icon material-icons">play</i></td></tr>');
                 }
             }
         },
@@ -47,4 +48,42 @@ function back() {
     } else {
         goto('/job' + up_path);
     }
+}
+
+var e = true;
+function edit() {
+    if (e) {
+        e = false;
+        $('#edit').show();
+        $('#description').hide();
+        $('#btn').text('{web.retract}');
+    } else {
+        e = true;
+        $('#edit').hide();
+        $('#description').show();
+        $('#btn').text('{web.edit.description}');
+    }
+}
+
+function save() {
+    var data = {};
+    data.params = {};
+    data.params.path = localStorage.path;
+    data.params.description = $('#docs').val();
+    showLoading();
+    $.ajax({
+        type: 'POST',
+        url: '/api2/edit/dir',
+        data: JSON.stringify(data),
+        success: function (json) {
+            closeLoading();
+            $('#description').html(json.params.description);
+            $('#docs').text(json.params.description);
+            e = true;
+            $('#edit').hide();
+            $('#description').show();
+            $('#btn').text('{web.edit.description}');
+        },
+        dataType:"json",
+    });
 }

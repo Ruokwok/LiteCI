@@ -17,7 +17,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -33,6 +32,7 @@ public class ApiServlet extends ServerServlet {
         map.put("/api1/setting/theme/set", ApiServlet::setTheme);
         map.put("/api1/create/dir", ApiServlet::createDir);
         map.put("/api1/create/job", ApiServlet::createJob);
+        map.put("/api2/edit/dir", ApiServlet::editDir);
     }
 
     @Override
@@ -126,6 +126,7 @@ public class ApiServlet extends ServerServlet {
             }
             list.list = new LinkedList<>();
             list.name = project.name;
+            list.description = project.getDescription();
             for (Map.Entry<String, Project> entry : project.internal.entrySet()) {
                 try {
                     if (entry.getValue() instanceof Dir) {
@@ -150,6 +151,23 @@ public class ApiServlet extends ServerServlet {
                 }
             }
             resp.getWriter().println(list);
+        }
+    }
+
+    public static void editDir(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Json json = new Gson().fromJson(str, Json.class);
+        resp.setStatus(200);
+        try {
+            Project project = Project.getProject(json.params.get("path"));
+            if (project instanceof Dir) {
+                Dir dir = (Dir) project;
+                dir.description.set(json.params.get("description"));
+                json.params.put("status", "success");
+                resp.getWriter().println(json);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.getWriter().println(new DialogJson(L.get("project.target.write.fail")));
         }
     }
 }
