@@ -29,6 +29,7 @@ public class ServerServlet extends HttpServlet {
         htmlMap.put("/setting/theme", L.format(Format.res("setting-theme", html)));
         htmlMap.put("/setting/build", L.format(Format.res("setting-build", html)));
         htmlMap.put("/job/dir", L.format(Format.res("dir", html)));
+        htmlMap.put("/job/job", L.format(Format.res("job", html)));
         htmlMap.put("/edit/dir", L.format(Format.res("edit-dir", html)));
         htmlMap.put("/new-job", L.format(Format.res("new-job", html)));
         htmlMap.put("/login", L.format(getResourcesToString("login.html")));
@@ -38,6 +39,7 @@ public class ServerServlet extends HttpServlet {
         htmlMap.put("/js/setting-build.js", L.format(getResourcesToString("/js/setting-build.js")));
         htmlMap.put("/js/new-job.js", L.format(getResourcesToString("/js/new-job.js")));
         htmlMap.put("/js/dir.js", L.format(getResourcesToString("/js/dir.js")));
+        htmlMap.put("/js/job.js", L.format(getResourcesToString("/js/job.js")));
         privateUrl.add("/");
         privateUrl.add("/setting/theme");
         privateUrl.add("/setting/build");
@@ -69,6 +71,10 @@ public class ServerServlet extends HttpServlet {
                 Project project = Project.getProject(path.substring(5));
                 if (project != null && project.isDir()) {
                     String jhtml = htmlMap.get("/job/dir");
+                    resp.setStatus(200);
+                    resp.getWriter().println(jhtml);
+                } else if (project != null && !project.isDir()) {
+                    String jhtml = htmlMap.get("/job/job");
                     resp.setStatus(200);
                     resp.getWriter().println(jhtml);
                 }
