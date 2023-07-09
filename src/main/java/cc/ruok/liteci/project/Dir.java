@@ -1,5 +1,6 @@
 package cc.ruok.liteci.project;
 
+import cc.ruok.liteci.LiteCI;
 import cc.ruok.liteci.Logger;
 import cc.ruok.liteci.config.Description;
 import cc.ruok.liteci.i18n.L;
@@ -15,7 +16,11 @@ public class Dir extends Project {
     public Dir(File file, Dir father) {
         super(file, father);
         this.name = file.getName();
-        if (!file.getPath().equals("jobs")) this.description = new Description(new File(file + "/.description"));
+        if (!file.getPath().equals("jobs")) {
+            this.description = new Description(new File(file + "/.description"));
+        } else {
+            this.description = new Description(LiteCI.DESC_FILE);
+        }
         File[] files = file.listFiles();
         if (files == null) return;
         internal = new HashMap<>();
