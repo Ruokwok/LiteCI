@@ -30,7 +30,7 @@ public class ServerServlet extends HttpServlet {
         htmlMap.put("/setting/build", L.format(Format.res("setting-build", html)));
         htmlMap.put("/job/dir", L.format(Format.res("dir", html)));
         htmlMap.put("/job/job", L.format(Format.res("job", html)));
-        htmlMap.put("/edit/dir", L.format(Format.res("edit-dir", html)));
+        htmlMap.put("/edit/job", L.format(Format.res("edit-job", html)));
         htmlMap.put("/new-job", L.format(Format.res("new-job", html)));
         htmlMap.put("/login", L.format(getResourcesToString("login.html")));
         htmlMap.put("/js/liteci.js", L.format(getResourcesToString("/js/liteci.js")));
@@ -40,6 +40,7 @@ public class ServerServlet extends HttpServlet {
         htmlMap.put("/js/new-job.js", L.format(getResourcesToString("/js/new-job.js")));
         htmlMap.put("/js/dir.js", L.format(getResourcesToString("/js/dir.js")));
         htmlMap.put("/js/job.js", L.format(getResourcesToString("/js/job.js")));
+        htmlMap.put("/js/edit-job.js", L.format(getResourcesToString("/js/edit-job.js")));
         privateUrl.add("/");
         privateUrl.add("/setting/theme");
         privateUrl.add("/setting/build");
@@ -85,8 +86,8 @@ public class ServerServlet extends HttpServlet {
         } else if (path.startsWith("/edit")) {
             if (checkPermission("/edit", req.getSession().getId())) {
                 Project project = Project.getProject(path.substring(5));
-                if (project != null && project.isDir()) {
-                    String jhtml = htmlMap.get("/edit/dir");
+                if (project != null && !project.isDir()) {
+                    String jhtml = htmlMap.get("/edit/job");
                     resp.setStatus(200);
                     resp.getWriter().println(jhtml);
                 }

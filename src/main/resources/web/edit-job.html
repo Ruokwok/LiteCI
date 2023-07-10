@@ -1,0 +1,78 @@
+<div class="mdui-row mdui-typo mdui-p-t-4">
+    <div class="mdui-col-sm-12 mdui-col-offset-sm-0">
+        <div class="mdui-typo-title mdui-m-b-2">
+            <strong>
+                {web.edit}
+                <text id="path"></text>
+            </strong>
+            <button class="mdui-btn mdui-color-theme-accent mdui-ripple mdui-shadow-2 mdui-float-right" onclick="back()">{web.back}</button>
+        </div>
+        <div class="mdui-card mdui-p-l-2 mdui-p-r-2">
+            <div class="mdui-typo-title">{web.edit.description}</div>
+            <div class="mdui-textfield mdui-textfield-floating-label mdui-m-t-0">
+                <textarea class="mdui-textfield-input" rows="5" id="description"></textarea>
+            </div>
+        </div>
+        <div class="mdui-card mdui-p-a-2 mdui-m-t-2">
+            <div class="mdui-typo-title">{web.edit.trigger}</div>
+            <div>
+                <label class="mdui-checkbox">
+                    <input type="checkbox"/>
+                    <i class="mdui-checkbox-icon"></i>
+                    {web.edit.trigger.webhook}
+                </label>
+            </div>
+            <div>
+                <label class="mdui-checkbox">
+                    <input type="checkbox"/>
+                    <i class="mdui-checkbox-icon"></i>
+                    {web.edit.trigger.cron}
+                </label>
+            </div>
+        </div>
+        <div class="mdui-card mdui-p-a-2 mdui-m-t-2">
+            <div class="mdui-typo-title">{web.edit.check}</div>
+            <div>
+                <label class="mdui-checkbox">
+                    <input type="checkbox"/>
+                    <i class="mdui-checkbox-icon"></i>
+                    {web.edit.check.enable}
+                </label>
+                <button class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '{web.edit.check.tips}'}">
+                    <i class="mdui-icon material-icons">help</i>
+                </button>
+            </div>
+        </div>
+        <div class="mdui-card mdui-p-a-2 mdui-m-t-2">
+            <div class="mdui-typo-title">{web.edit.step}</div>
+            <div class="mdui-textfield mdui-textfield-floating-label mdui-m-t-0" id="i-docs">
+                <textarea class="mdui-textfield-input" rows="5" id="docs"></textarea>
+            </div>
+        </div>
+        <div class="mdui-card mdui-p-a-2 mdui-m-t-2">
+            <div class="mdui-typo-title">{web.edit.finish}</div>
+            <div>
+                <label class="mdui-checkbox">
+                    <input type="checkbox"/>
+                    <i class="mdui-checkbox-icon"></i>
+                    {web.edit.finish.artifact}
+                </label>
+            </div>
+            <div>
+                <label class="mdui-checkbox">
+                    <input type="checkbox"/>
+                    <i class="mdui-checkbox-icon"></i>
+                    {web.edit.finish.mail}
+                </label>
+            </div>
+            <div>
+                <label class="mdui-checkbox">
+                    <input type="checkbox"/>
+                    <i class="mdui-checkbox-icon"></i>
+                    {web.edit.finish.other}
+                </label>
+            </div>
+        </div>
+        <button class="mdui-btn mdui-color-theme-accent mdui-ripple mdui-shadow-2 mdui-m-t-2" onclick="save()">{set.save}</button>
+    </div>
+</div>

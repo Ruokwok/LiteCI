@@ -1,6 +1,7 @@
 package cc.ruok.liteci.servlet;
 
 import cc.ruok.liteci.LiteCI;
+import cc.ruok.liteci.config.JobConfig;
 import cc.ruok.liteci.json.JobListJson;
 import cc.ruok.liteci.project.Dir;
 import cc.ruok.liteci.project.Job;
@@ -33,6 +34,7 @@ public class ApiServlet extends ServerServlet {
         map.put("/api1/create/dir", ApiServlet::createDir);
         map.put("/api1/create/job", ApiServlet::createJob);
         map.put("/api2/edit/dir", ApiServlet::editDir);
+        map.put("/api2/edit/job", ApiServlet::editJob);
     }
 
     @Override
@@ -163,6 +165,23 @@ public class ApiServlet extends ServerServlet {
                 Dir dir = (Dir) project;
                 dir.description.set(json.params.get("description"));
                 json.params.put("status", "success");
+                resp.getWriter().println(json);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.getWriter().println(new DialogJson(L.get("project.target.write.fail")));
+        }
+    }
+
+    public static void editJob(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setStatus(200);
+        try {
+            JobConfig json = new Gson().fromJson(str, JobConfig.class);
+            Project project = Project.getProject(json.path);
+            if (project instanceof Job) {
+                Job job = (Job) project;
+                job.getConfig().description = json.description;
+                job.save();
                 resp.getWriter().println(json);
             }
         } catch (Exception e) {

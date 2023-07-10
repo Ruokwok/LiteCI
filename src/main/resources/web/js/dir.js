@@ -7,7 +7,7 @@ function update() {
     var data = {};
     data.params = {};
     data.params.path = window.location.pathname.substring(5);
-    $('#job-list').append('<tr onclick="back()"><td><i class="mdui-icon material-icons mdui-text-color-orange">folder</i></td><td>{web.back}</td><td>{web.none}</td><td>{web.none}</td><td>{web.none}</td><td></td></tr>');
+    $('#job-list').append('<tr onclick="back()"><td><i class="mdui-icon material-icons mdui-text-color-orange">folder</i></td><td>{web.path.back}</td><td>{web.none}</td><td>{web.none}</td><td>{web.none}</td><td></td></tr>');
     $.ajax({
         type: 'POST',
         url: '/api/jobs',

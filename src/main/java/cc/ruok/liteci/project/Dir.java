@@ -25,7 +25,7 @@ public class Dir extends Project {
         if (files == null) return;
         internal = new HashMap<>();
         for (File _file : files) {
-            if (_file.getName().equals(".description")) return;
+            if (_file.getName().equals(".description")) continue;
             if (_file.isDirectory()) {
                 internal.put(_file.getName(), new Dir(_file, this));
             } else {

@@ -3,9 +3,7 @@ package cc.ruok.liteci.json;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JobsJson extends Json {
-
-    public List<Job> jobs = new ArrayList<>();
+public class JobJson extends Json {
 
     public static class Job {
 

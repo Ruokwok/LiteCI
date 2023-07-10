@@ -1,6 +1,6 @@
 package cc.ruok.liteci.config;
 
-import cc.ruok.liteci.project.Job;
+import com.google.gson.Gson;
 
 import java.io.File;
 
@@ -17,13 +17,26 @@ public class JobConfig extends Config {
     public int status;
     public String workspace;
     public String description = "";
+    public String path;
 
     public JobConfig(File file) {
         this.file = file;
     }
 
+    public JobConfig() {
+    }
+
     @Override
     public File getFile() {
         return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }

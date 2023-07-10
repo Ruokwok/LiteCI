@@ -38,3 +38,19 @@ mdui.dialog({
     ]
 });
 }
+
+function post(url, data, success) {
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: JSON.stringify(data),
+        success: function (json) {
+            if (json.type == 'dialog') {
+                dialog(json.content);
+            } else {
+                success(json);
+            }
+        },
+        dataType: 'json'
+    });
+}
