@@ -3,6 +3,7 @@ package cc.ruok.liteci.config;
 import com.google.gson.Gson;
 
 import java.io.File;
+import java.util.List;
 
 public class JobConfig extends Config {
 
@@ -18,6 +19,11 @@ public class JobConfig extends Config {
     public String workspace;
     public String description = "";
     public String path;
+    public List<String> shell;
+    public Webhook webhook = new Webhook();
+    public Cron cron = new Cron();
+    public Check check = new Check();
+    public Artifact artifact = new Artifact();
 
     public JobConfig(File file) {
         this.file = file;
@@ -38,5 +44,33 @@ public class JobConfig extends Config {
     @Override
     public String toString() {
         return new Gson().toJson(this);
+    }
+
+    public static class Webhook {
+
+        public boolean enable;
+        public String token;
+
+    }
+    public static class Cron {
+
+        public boolean enable;
+        public String expression;
+
+    }
+
+    public static class Check {
+
+        public boolean enable;
+        public List<String> shell;
+        public boolean only_cron;
+
+    }
+
+    public static class Artifact {
+
+        public boolean enable;
+        public List<String> files;
+
     }
 }

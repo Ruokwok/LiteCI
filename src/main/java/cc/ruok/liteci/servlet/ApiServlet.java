@@ -35,6 +35,7 @@ public class ApiServlet extends ServerServlet {
         map.put("/api1/create/job", ApiServlet::createJob);
         map.put("/api2/edit/dir", ApiServlet::editDir);
         map.put("/api2/edit/job", ApiServlet::editJob);
+        map.put("/api2/get/job", ApiServlet::getConfig);
     }
 
     @Override
@@ -181,12 +182,34 @@ public class ApiServlet extends ServerServlet {
             if (project instanceof Job) {
                 Job job = (Job) project;
                 job.getConfig().description = json.description;
+                job.getConfig().webhook = json.webhook;
+                job.getConfig().cron = json.cron;
+                job.getConfig().check = json.check;
+                job.getConfig().artifact = json.artifact;
+                job.getConfig().shell = json.shell;
                 job.save();
-                resp.getWriter().println(json);
+                resp.getWriter().println(new DialogJson(L.get("set.save.success")));
+            } else {
+                resp.getWriter().println(new DialogJson(L.get("project.target.write.fail")));
             }
         } catch (Exception e) {
             e.printStackTrace();
             resp.getWriter().println(new DialogJson(L.get("project.target.write.fail")));
+        }
+    }
+
+    public static void getConfig(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            Json json = new Gson().fromJson(str, Json.class);
+            Project project = Project.getProject(json.params.get("path"));
+            if (project instanceof Job) {
+                resp.getWriter().println(((Job) project).getConfig());
+            } else {
+                resp.getWriter().println(new DialogJson(L.get("project.target.write.fail")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.getWriter().println(new DialogJson(L.get("project.target.read.fail")));
         }
     }
 }

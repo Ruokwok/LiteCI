@@ -1,4 +1,4 @@
-<div class="mdui-row mdui-typo mdui-p-t-4">
+<div class="mdui-row mdui-typo mdui-p-t-4" xmlns="http://www.w3.org/1999/html">
     <div class="mdui-col-sm-12 mdui-col-offset-sm-0">
         <div class="mdui-typo-title mdui-m-b-2">
             <strong>
@@ -9,7 +9,7 @@
         </div>
         <div class="mdui-card mdui-p-l-2 mdui-p-r-2">
             <div class="mdui-typo-title">{web.edit.description}</div>
-            <div class="mdui-textfield mdui-textfield-floating-label mdui-m-t-0">
+            <div class="mdui-textfield mdui-textfield-floating-label mdui-m-t-0 mdui-p-a-0 mdui-m-b-2">
                 <textarea class="mdui-textfield-input" rows="5" id="description"></textarea>
             </div>
         </div>
@@ -17,46 +17,71 @@
             <div class="mdui-typo-title">{web.edit.trigger}</div>
             <div>
                 <label class="mdui-checkbox">
-                    <input type="checkbox"/>
+                    <input type="checkbox" id="webhook"/>
                     <i class="mdui-checkbox-icon"></i>
                     {web.edit.trigger.webhook}
                 </label>
+                <div class="mdui-textfield mdui-textfield-floating-label mdui-m-l-4 mdui-p-a-0" id="webhook-card" style="display: none">
+                    <label class="mdui-textfield-label">{web.edit.trigger.webhook.token}</label>
+                    <input class="mdui-textfield-input" type="text" id="token"/>
+                    <div class="mdui-typo-subheading">
+                        {web.edit.trigger.webhook.tips}:
+                        <code id="webhook-url"></code>
+                    </div>
+                </div>
             </div>
             <div>
                 <label class="mdui-checkbox">
-                    <input type="checkbox"/>
+                    <input type="checkbox" id="cron"/>
                     <i class="mdui-checkbox-icon"></i>
                     {web.edit.trigger.cron}
                 </label>
+                <div class="mdui-textfield mdui-textfield-floating-label mdui-m-l-4 mdui-p-a-0" id="cron-card" style="display: none">
+                    <label class="mdui-textfield-label">{web.edit.trigger.cron.cron}</label>
+                    <input class="mdui-textfield-input" type="text" id="cron-expression"/>
+                </div>
             </div>
         </div>
         <div class="mdui-card mdui-p-a-2 mdui-m-t-2">
             <div class="mdui-typo-title">{web.edit.check}</div>
             <div>
                 <label class="mdui-checkbox">
-                    <input type="checkbox"/>
+                    <input type="checkbox" id="check"/>
                     <i class="mdui-checkbox-icon"></i>
                     {web.edit.check.enable}
                 </label>
                 <button class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '{web.edit.check.tips}'}">
                     <i class="mdui-icon material-icons">help</i>
                 </button>
+                <div class="mdui-textfield mdui-textfield-floating-label mdui-m-t-0 mdui-p-a-0" id="check-card" style="display: none">
+                    <textarea class="mdui-textfield-input" rows="5" id="check-shell"></textarea>
+                    <label class="mdui-checkbox mdui-m-l-2">
+                        <input type="checkbox" id="only-cron"/>
+                        <i class="mdui-checkbox-icon"></i>
+                        {web.edit.check.only}
+                    </label>
+                </div>
             </div>
         </div>
         <div class="mdui-card mdui-p-a-2 mdui-m-t-2">
             <div class="mdui-typo-title">{web.edit.step}</div>
-            <div class="mdui-textfield mdui-textfield-floating-label mdui-m-t-0" id="i-docs">
-                <textarea class="mdui-textfield-input" rows="5" id="docs"></textarea>
+            <div class="mdui-textfield mdui-textfield-floating-label mdui-m-t-0 mdui-p-a-0">
+                <textarea class="mdui-textfield-input" rows="5" id="build-shell"></textarea>
             </div>
         </div>
         <div class="mdui-card mdui-p-a-2 mdui-m-t-2">
             <div class="mdui-typo-title">{web.edit.finish}</div>
             <div>
                 <label class="mdui-checkbox">
-                    <input type="checkbox"/>
+                    <input type="checkbox" id="artifact"/>
                     <i class="mdui-checkbox-icon"></i>
                     {web.edit.finish.artifact}
                 </label>
+                <div class="mdui-textfield mdui-textfield-floating-label mdui-m-l-4 mdui-p-t-0" id="artifact-card" style="display: none">
+                    <label class="mdui-textfield-label">{web.edit.trigger.artifact.file}</label>
+                    <textarea class="mdui-textfield-input" id="artifact-file"></textarea>
+                    <div class="mdui-textfield-helper">{web.edit.trigger.artifact.help}</div>
+                </div>
             </div>
             <div>
                 <label class="mdui-checkbox">
