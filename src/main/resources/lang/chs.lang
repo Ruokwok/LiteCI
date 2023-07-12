@@ -20,6 +20,7 @@ web.not.null=不能为空
 web.password=密码
 web.login.fail=用户名或密码错误
 web.logging.in=正在登录
+web.build=触发构建
 set.theme.theme=主题色
 set.theme.accent=强调色
 set.theme.title=网站标题
