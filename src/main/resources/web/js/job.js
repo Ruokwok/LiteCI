@@ -14,8 +14,16 @@ function update() {
         $('#name').text(json.name);
         $('#date').text(toDate(json.date));
         $('#time').html(toTime(json.time));
-        if (json.artifacts == undefined) {
+        if (json.description != "") {
+            $('#description').html(json.description);
+            $('#description').show();
+        }
+        if (json.artifact == undefined) {
             $('#artifact').append('<li>{web.none}</li>');
+        } else {
+            for (var i in json.artifact) {
+                $('#artifact').append('<li><a href="#">' + json.artifact[i].name + '</a><small class="mdui-m-l-2">' + json.artifact[i].size + '</small></li>')
+            }
         }
     });
 }

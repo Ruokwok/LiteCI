@@ -39,4 +39,8 @@ public class Job extends Project {
     public File getWorkspace() {
         return workspace;
     }
+
+    public File getBuild(int id) {
+        return new File(workspace + "/build/" + id);
+    }
 }

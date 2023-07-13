@@ -5,6 +5,7 @@ import cc.ruok.liteci.i18n.L;
 import cc.ruok.liteci.pipe.Pipeline;
 import cc.ruok.liteci.project.Job;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,14 +21,19 @@ public class Task implements Runnable {
     private Pipeline pipe;
     private StringBuffer output;
     private Timer timer = new Timer();
+    private File terminal;
 
     private static String and;
+    private static String charset;
+    private int id;
 
     static {
         if (System.getProperty("os.name").contains("Windows")) {
             and = "&";
+            charset = "gbk";
         } else {
             and = ";";
+            charset = "utf8";
         }
     }
 
@@ -37,6 +43,13 @@ public class Task implements Runnable {
         if (!work.exists()) work.mkdir();
         if (!build.exists()) build.mkdir();
 
+        id = job.getConfig().length + 1;
+        terminal = new File(build + "/" + id + "/terminal.txt");
+        try {
+            terminal.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if (job.getConfig().artifact.enable) {
             for (String f : job.getConfig().artifact.files) {
                 File file = new File(work + "/" + f);
@@ -55,17 +68,18 @@ public class Task implements Runnable {
         output = new StringBuffer();
         pipe.setHandler(this::output);
         pipe.setPath(work);
-        pipe.setCommand((System.getProperty("os.name").contains("Windows") ? "cmd /C " : "") + formatShell(job));
+        pipe.setCharset(charset);
+        pipe.setCommand((System.getProperty("os.name").contains("Windows") ? "cmd /C" : "") + formatShell(job));
         try {
             int exit = pipe.run();
-            job.getConfig().length = job.getConfig().length + 1;
+            job.getConfig().length = id;
             job.save();
             File file = new File(build + "/" + job.getConfig().length);
             file.mkdir();
             BuildConfig config = new BuildConfig(new File(file + "/build.json"));
             config.date = System.currentTimeMillis();
             config.time = System.currentTimeMillis() - start;
-            config.id = job.getConfig().length;
+            config.id = id;
             if (exit == 0) {
                 success(config);
             } else {
@@ -113,6 +127,11 @@ public class Task implements Runnable {
 
     public void output(String str) {
         output.append("\n").append(str.trim());
+        try {
+            FileUtils.writeStringToFile(terminal, str + "\n", true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String formatShell(Job job) {

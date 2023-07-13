@@ -22,9 +22,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 public class ApiServlet extends ServerServlet {
 
@@ -235,6 +233,18 @@ public class ApiServlet extends ServerServlet {
                 j.name = job.name;
                 j.date = job.getConfig().last_success;
                 j.time = job.getConfig().last_time;
+                j.description = job.getDescription();
+                File build = job.getBuild(job.getConfig().length);
+                File arti = new File(build + "/artifacts");
+                if (arti.exists() && arti.isDirectory() && arti.listFiles() != null && Objects.requireNonNull(arti.listFiles()).length > 0) {
+                    j.artifact = new ArrayList<>();
+                    for (File file :  arti.listFiles()){
+                        JobJson.File f = new JobJson.File();
+                        f.name = file.getName();
+                        f.size = file.length();
+                        j.artifact.add(f);
+                    }
+                }
                 resp.getWriter().println(j);
             }
         } catch (Exception e) {
