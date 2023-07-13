@@ -11,7 +11,7 @@ public class JobConfig extends Config {
 
     public String uuid;
     public String name;
-    public String length;
+    public int length;
     public long last_time;
     public long last_success;
     public long last_fail;

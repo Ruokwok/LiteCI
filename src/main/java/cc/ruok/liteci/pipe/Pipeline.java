@@ -61,11 +61,12 @@ public class Pipeline {
         this.shell = file;
     }
 
-    public void run() throws IOException {
+    public int run() throws IOException {
         process = Runtime.getRuntime().exec((shell != null && shell.exists())? shell.getName() :command, null, path);
         bw[0] = new BufferedWriter(new OutputStreamWriter(process.getOutputStream(), charset));
         new Thread(this::readStderr).start();
         readStdout();
+        return process.exitValue();
     }
 
     public void readStdout() {

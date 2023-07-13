@@ -1,5 +1,6 @@
 package cc.ruok.liteci;
 
+import cc.ruok.liteci.config.BuildConfig;
 import cc.ruok.liteci.pipe.Pipeline;
 import cc.ruok.liteci.project.Job;
 
@@ -30,6 +31,7 @@ public class Task implements Runnable {
 
     @Override
     public void run() {
+        long start = System.currentTimeMillis();
         if (!work.exists()) work.mkdir();
         if (!build.exists()) build.mkdir();
         pipe = new Pipeline();
@@ -38,12 +40,22 @@ public class Task implements Runnable {
         pipe.setPath(work);
         pipe.setCommand((System.getProperty("os.name").contains("Windows") ? "cmd /C " : "") + formatShell(job));
         try {
-            pipe.run();
+            int exit = pipe.run();
+            job.getConfig().length = job.getConfig().length + 1;
+            job.save();
+            File file = new File(build + "/" + job.getConfig().length);
+            file.mkdir();
+            BuildConfig config = new BuildConfig(new File(file + "/build.json"));
+            config.date = System.currentTimeMillis();
+            config.time = System.currentTimeMillis() - start;
+            config.id = job.getConfig().length;
+            if (exit == 0) {
+                success(config);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             output(e.getMessage());
         }
-
     }
 
     public void setJob(Job job) {
@@ -99,6 +111,19 @@ public class Task implements Runnable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void success(BuildConfig config) {
+        config.status = true;
+        job.getConfig().last_success = config.date;
+        job.getConfig().last_time = config.time;
+        job.getConfig().status = 1;
+        try {
+            config.save();
+            job.save();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
