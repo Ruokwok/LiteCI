@@ -4,6 +4,9 @@ import cc.ruok.liteci.pipe.Pipeline;
 import cc.ruok.liteci.project.Job;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Task implements Runnable {
 
@@ -13,6 +16,8 @@ public class Task implements Runnable {
     private File build;
     private Pipeline pipe;
     private StringBuffer output;
+    private Timer timer = new Timer();
+
     private static String and;
 
     static {
@@ -38,6 +43,7 @@ public class Task implements Runnable {
             e.printStackTrace();
             output(e.getMessage());
         }
+
     }
 
     public void setJob(Job job) {
@@ -48,6 +54,14 @@ public class Task implements Runnable {
     }
 
     public void start() {
+        if (LiteCI.serverConfig.build_timeout > 0) {
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    timeout();
+                }
+            }, LiteCI.serverConfig.build_timeout);
+        }
         thread = new Thread(this);
         thread.start();
     }
@@ -76,6 +90,16 @@ public class Task implements Runnable {
             shell.append(cmd).append(and);
         }
         return shell.toString();
+    }
+
+    public void timeout() {
+        if (isActive()) {
+            try {
+                pipe.kill();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

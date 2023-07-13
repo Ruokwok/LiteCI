@@ -12,6 +12,7 @@ public class ServerConfig extends Config {
     public String accent = "pink";
     public int secure_level = 4;
     public int task_count = 2;
+    public long build_timeout = 0;
 
     @Override
     public File getFile() {
