@@ -14,5 +14,8 @@ function update() {
         $('#name').text(json.name);
         $('#date').text(toDate(json.date));
         $('#time').html(toTime(json.time));
+        if (json.artifacts == undefined) {
+            $('#artifact').append('<li>{web.none}</li>');
+        }
     });
 }

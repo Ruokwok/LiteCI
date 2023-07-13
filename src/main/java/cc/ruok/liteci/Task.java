@@ -1,8 +1,10 @@
 package cc.ruok.liteci;
 
 import cc.ruok.liteci.config.BuildConfig;
+import cc.ruok.liteci.i18n.L;
 import cc.ruok.liteci.pipe.Pipeline;
 import cc.ruok.liteci.project.Job;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +36,21 @@ public class Task implements Runnable {
         long start = System.currentTimeMillis();
         if (!work.exists()) work.mkdir();
         if (!build.exists()) build.mkdir();
+
+        if (job.getConfig().artifact.enable) {
+            for (String f : job.getConfig().artifact.files) {
+                File file = new File(work + "/" + f);
+                if (file.exists()) {
+                    try {
+                        FileUtils.delete(file);
+                    } catch (IOException e) {
+                        Logger.error(L.get("console.build.delete.artifact.fail"));
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
         pipe = new Pipeline();
         output = new StringBuffer();
         pipe.setHandler(this::output);
@@ -51,6 +68,8 @@ public class Task implements Runnable {
             config.id = job.getConfig().length;
             if (exit == 0) {
                 success(config);
+            } else {
+                fail(config);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -119,6 +138,33 @@ public class Task implements Runnable {
         job.getConfig().last_success = config.date;
         job.getConfig().last_time = config.time;
         job.getConfig().status = 1;
+        try {
+            config.save();
+            job.save();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (job.getConfig().artifact.enable) {
+            File dir = new File(build + "/" + config.id + "/artifacts");
+            dir.mkdir();
+            for (String f : job.getConfig().artifact.files) {
+                File file = new File(work + "/" + f);
+                if (file.exists()) {
+                    try {
+                        FileUtils.copyFile(file, new File(dir + "/" + file.getName()));
+                    } catch (IOException e) {
+                        Logger.error(L.get("console.build.copy.artifact.fail") + ": " + f);
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    public void fail(BuildConfig config) {
+        config.status = false;
+        job.getConfig().last_fail = config.date;
+        job.getConfig().status = 2;
         try {
             config.save();
             job.save();

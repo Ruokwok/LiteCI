@@ -77,3 +77,5 @@ project.target.exists=目标已存在
 project.target.write.fail=文件写入失败，请检查路径是否正确
 project.target.read.fail=读取失败，请检查配置文件是否正确
 project.read.fail=读取项目失败，请检查配置文件
+console.build.delete.artifact.fail=删除旧的归档文件失败，文件可能被占用
+console.build.copy.artifact.fail=保存归档文件失败
