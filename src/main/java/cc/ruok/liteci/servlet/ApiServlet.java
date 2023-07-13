@@ -1,5 +1,6 @@
 package cc.ruok.liteci.servlet;
 
+import cc.ruok.liteci.BuildQueue;
 import cc.ruok.liteci.LiteCI;
 import cc.ruok.liteci.config.JobConfig;
 import cc.ruok.liteci.json.JobListJson;
@@ -35,6 +36,7 @@ public class ApiServlet extends ServerServlet {
         map.put("/api1/setting/theme/set", ApiServlet::setTheme);
         map.put("/api1/create/dir", ApiServlet::createDir);
         map.put("/api1/create/job", ApiServlet::createJob);
+        map.put("/api1/build", ApiServlet::build);
         map.put("/api2/edit/dir", ApiServlet::editDir);
         map.put("/api2/edit/job", ApiServlet::editJob);
         map.put("/api2/get/job", ApiServlet::getConfig);
@@ -240,6 +242,14 @@ public class ApiServlet extends ServerServlet {
         } catch (Exception e) {
             e.printStackTrace();
             resp.getWriter().println(new DialogJson(L.get("project.target.read.fail")));
+        }
+    }
+
+    public static void build(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        Json json = new Gson().fromJson(str, Json.class);
+        Project project = Project.getProject(json.params.get("path"));
+        if (project instanceof Job) {
+            BuildQueue.add((Job) project);
         }
     }
 }

@@ -46,6 +46,7 @@ public class LiteCI {
             ServerServlet._init();
             ApiServlet._init();
             Project.load();
+            Build.init();
         } catch (Exception e) {
             e.printStackTrace();
         }
