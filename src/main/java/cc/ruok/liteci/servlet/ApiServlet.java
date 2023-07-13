@@ -95,13 +95,18 @@ public class ApiServlet extends ServerServlet {
     }
 
     public static void createDir(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        Json json = new Gson().fromJson(str, Json.class);
-        String s = Project.createDir(json.params.get("path"), json.params.get("name"));
-        if (s != null) {
-            resp.getWriter().println(new DialogJson(s));
-        } else {
-            json.params.put("status", "success");
-            resp.getWriter().println(json);
+        try {
+            Json json = new Gson().fromJson(str, Json.class);
+            String s = Project.createDir(json.params.get("path"), json.params.get("name"));
+            if (s != null) {
+                resp.getWriter().println(new DialogJson(s));
+            } else {
+                json.params.put("status", "success");
+                resp.getWriter().println(json);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.getWriter().println(new DialogJson(L.get("project.target.write.fail")));
         }
     }
 

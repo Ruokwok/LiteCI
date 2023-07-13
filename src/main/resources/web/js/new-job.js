@@ -23,6 +23,8 @@ function create() {
                     } else {
                         asyncGoto('/job' + localStorage.path);
                     }
+                } else {
+                    asyncGoto('/edit' + localStorage.path + (localStorage.path == '/' ? '' : '/') + data.params.name);
                 }
             } else {
                 dialog(json.content);

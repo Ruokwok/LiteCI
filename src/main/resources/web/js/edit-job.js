@@ -1,3 +1,4 @@
+localStorage.path = window.location.pathname.substring(5).replace("%20", " ");
 $('#path').text(localStorage.path);
 $('#webhook-url').text(window.location.protocol + "//" + document.domain + "/webhook" + localStorage.path + "?token={TOKEN}");
 $(document).on('change', 'input[type="checkbox"]', function(){
