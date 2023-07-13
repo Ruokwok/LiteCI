@@ -21,7 +21,7 @@ function update() {
                 if (json.list[i].is_dir) {
                     $('#job-list').append('<tr onclick="goto(\'/job/' + json.list[i].name + '\')")><td>' + getIcon(json.list[i]) + '</td><td>' + json.list[i].name + '</td><td>{web.none}</td><td>{web.none}</td><td>{web.none}</td><td><i class="mdui-icon material-icons">play</i></td></tr>');
                 } else {
-                    $('#job-list').append('<tr onclick="goto(\'/job/' + json.list[i].name + '\')")><td>' + getIcon(json.list[i]) + '</td><td>' + json.list[i].name + '</td><td>' + json.list[i].last_success + '</td><td>' + json.list[i].last_fail + '</td><td>' + json.list[i].last_time + '</td><td><i class="mdui-icon material-icons">play</i></td></tr>');
+                    $('#job-list').append('<tr onclick="goto(\'/job/' + json.list[i].name + '\')")><td>' + getIcon(json.list[i]) + '</td><td>' + json.list[i].name + '</td><td>' + toDate(json.list[i].last_success) + '</td><td>' + toDate(json.list[i].last_fail) + '</td><td>' + toTime(json.list[i].last_time) + '</td><td><i class="mdui-icon material-icons">play</i></td></tr>');
                 }
             }
         },

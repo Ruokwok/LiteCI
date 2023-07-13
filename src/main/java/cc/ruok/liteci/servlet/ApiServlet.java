@@ -3,6 +3,7 @@ package cc.ruok.liteci.servlet;
 import cc.ruok.liteci.BuildQueue;
 import cc.ruok.liteci.LiteCI;
 import cc.ruok.liteci.config.JobConfig;
+import cc.ruok.liteci.json.JobJson;
 import cc.ruok.liteci.json.JobListJson;
 import cc.ruok.liteci.project.Dir;
 import cc.ruok.liteci.project.Job;
@@ -32,6 +33,7 @@ public class ApiServlet extends ServerServlet {
     public static void _init() {
         map.put("/api/login", ApiServlet::login);
         map.put("/api/jobs", ApiServlet::getJobs);
+        map.put("/api/info/job", ApiServlet::jobInfo);
         map.put("/api1/setting/theme/get", ApiServlet::getTheme);
         map.put("/api1/setting/theme/set", ApiServlet::setTheme);
         map.put("/api1/create/dir", ApiServlet::createDir);
@@ -216,6 +218,24 @@ public class ApiServlet extends ServerServlet {
                 resp.getWriter().println(((Job) project).getConfig());
             } else {
                 resp.getWriter().println(new DialogJson(L.get("project.target.write.fail")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.getWriter().println(new DialogJson(L.get("project.target.read.fail")));
+        }
+    }
+
+    public static void jobInfo(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            Json json = new Gson().fromJson(str, Json.class);
+            Project project = Project.getProject(json.params.get("path"));
+            if (project instanceof Job) {
+                Job job = (Job) project;
+                JobJson j = new JobJson();
+                j.name = job.name;
+                j.date = job.getConfig().last_success;
+                j.time = job.getConfig().last_time;
+                resp.getWriter().println(j);
             }
         } catch (Exception e) {
             e.printStackTrace();
