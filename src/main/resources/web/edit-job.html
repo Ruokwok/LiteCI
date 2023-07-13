@@ -5,7 +5,10 @@
                 {web.edit}
                 <text id="path"></text>
             </strong>
-            <button class="mdui-btn mdui-color-theme-accent mdui-ripple mdui-shadow-2 mdui-float-right" onclick="back()">{web.back}</button>
+            <div class="mdui-float-right">
+                <button class="mdui-btn mdui-color-red mdui-ripple mdui-shadow-2 mdui-m-r-1" onclick="remove()">{web.delete.job}</button>
+                <button class="mdui-btn mdui-color-theme-accent mdui-ripple mdui-shadow-2" onclick="back()">{web.back}</button>
+            </div>
         </div>
         <div class="mdui-card mdui-p-l-2 mdui-p-r-2">
             <div class="mdui-typo-title">{web.edit.description}</div>

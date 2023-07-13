@@ -9,10 +9,12 @@ import java.io.IOException;
 public class Job extends Project {
 
     private JobConfig config;
+    private File workspace;
 
     public Job(File file, Dir father) throws IOException {
         super(file, father);
         config = Config.loadJobConfig(file);
+        workspace = new File(config.workspace);
         this.name = config.name;
     }
 
@@ -32,5 +34,9 @@ public class Job extends Project {
 
     public void save() throws IOException {
         config.save();
+    }
+
+    public File getWorkspace() {
+        return workspace;
     }
 }

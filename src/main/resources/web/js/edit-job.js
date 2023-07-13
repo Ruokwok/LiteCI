@@ -94,3 +94,27 @@ function update() {
 //        closeLoading();
     });
 }
+
+function remove() {
+    var job = localStorage.path;
+    mdui.dialog({
+        title: '{web.remove.job.ask}',
+        content: job,
+        buttons: [
+            {
+                text: '{web.no}'
+            },
+            {
+                text: '{web.yes}',
+                onClick: function (inst) {
+                    post('/api2/remove/job', { params: { path: job}}, function(json) {
+                        console.log(json);
+                        if (json.params.status == "success") {
+                            asyncGoto('/');
+                        }
+                    });
+                }
+            }
+        ]
+    });
+}

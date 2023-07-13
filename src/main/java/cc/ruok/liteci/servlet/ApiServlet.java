@@ -16,7 +16,9 @@ import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -36,6 +38,7 @@ public class ApiServlet extends ServerServlet {
         map.put("/api2/edit/dir", ApiServlet::editDir);
         map.put("/api2/edit/job", ApiServlet::editJob);
         map.put("/api2/get/job", ApiServlet::getConfig);
+        map.put("/api2/remove/job", ApiServlet::removeJob);
     }
 
     @Override
@@ -211,6 +214,28 @@ public class ApiServlet extends ServerServlet {
                 resp.getWriter().println(((Job) project).getConfig());
             } else {
                 resp.getWriter().println(new DialogJson(L.get("project.target.write.fail")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.getWriter().println(new DialogJson(L.get("project.target.read.fail")));
+        }
+    }
+
+    public static void removeJob(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            Json json = new Gson().fromJson(str, Json.class);
+            Project project = Project.getProject(json.params.get("path"));
+            if (project instanceof Job) {
+                Job job = (Job) project;
+                Dir up = job.getUp();
+                up.getSons().remove(job.name);
+                FileUtils.delete(job.getFile());
+                FileUtils.delete(job.getWorkspace());
+                Runtime.getRuntime().gc();
+                json.params.put("status", "success");
+                resp.getWriter().println(json);
+            } else {
+                throw new Exception();
             }
         } catch (Exception e) {
             e.printStackTrace();
