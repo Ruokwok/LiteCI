@@ -45,11 +45,6 @@ public class Task implements Runnable {
 
         id = job.getConfig().length + 1;
         terminal = new File(build + "/" + id + "/terminal.txt");
-        try {
-            terminal.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         if (job.getConfig().artifact.enable) {
             for (String f : job.getConfig().artifact.files) {
                 File file = new File(work + "/" + f);

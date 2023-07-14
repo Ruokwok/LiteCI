@@ -1,5 +1,6 @@
 package cc.ruok.liteci.servlet;
 
+import cc.ruok.liteci.Build;
 import cc.ruok.liteci.BuildQueue;
 import cc.ruok.liteci.LiteCI;
 import cc.ruok.liteci.config.JobConfig;
@@ -243,6 +244,7 @@ public class ApiServlet extends ServerServlet {
                         f.name = file.getName();
                         f.size = file.length();
                         j.artifact.add(f);
+                        j.list = Build.getBuildList(job);
                     }
                 }
                 resp.getWriter().println(j);

@@ -2,14 +2,12 @@ package cc.ruok.liteci;
 
 import cc.ruok.liteci.config.BuildConfig;
 import cc.ruok.liteci.i18n.L;
+import cc.ruok.liteci.json.JobJson;
 import cc.ruok.liteci.project.Job;
 import org.h2.jdbc.JdbcSQLNonTransientConnectionException;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,6 +74,26 @@ public class Build {
             stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static List<JobJson.Info> getBuildList(Job job) {
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM build WHERE uuid='" + job.getUUID() + "' ORDER BY date DESC");
+            ArrayList<JobJson.Info> list = new ArrayList<>();
+            while (rs.next()) {
+                JobJson.Info info = new JobJson.Info();
+                info.id = rs.getInt("jobid");
+                info.status = rs.getBoolean("status");
+                info.date = rs.getLong("date");
+                info.time = rs.getInt("time");
+                list.add(info);
+            }
+            return list;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
