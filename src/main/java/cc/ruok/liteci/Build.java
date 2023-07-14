@@ -1,17 +1,47 @@
 package cc.ruok.liteci;
 
+import cc.ruok.liteci.config.BuildConfig;
+import cc.ruok.liteci.i18n.L;
 import cc.ruok.liteci.project.Job;
+import org.h2.jdbc.JdbcSQLNonTransientConnectionException;
 
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Build {
 
     private static List<Task> tasks = new ArrayList<>();
+    private static final String DATABASE = "jdbc:h2:" + new File("build").getAbsolutePath();
+    private static Connection conn;
 
     public static void init() {
         for (int i = 0; i < LiteCI.serverConfig.task_count; i++) {
             tasks.add(new Task());
+        }
+        try {
+            Class.forName("org.h2.Driver");
+            conn = DriverManager.getConnection(DATABASE);
+            Statement stmt = conn.createStatement();
+            try {
+                stmt.execute("create table build("
+                        + "    uuid varchar,"
+                        + "    jobid int,"
+                        + "    status boolean,"
+                        + "    time int,"
+                        + "    date bigint)"
+                        + "    ");
+            } catch (Exception e) {}
+            stmt.close();
+        } catch (JdbcSQLNonTransientConnectionException e) {
+            Logger.error(L.get("console.database.lock"));
+            System.exit(1);
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -31,6 +61,22 @@ public class Build {
             if (task.isIdle()) return task;
         }
         return null;
+    }
+
+    public static void addBuild(String uuid, BuildConfig config) {
+        try {
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate("INSERT INTO build VALUES('{uuid}',{jobid},{status},{time},{date})"
+                    .replace("{uuid}", uuid)
+                    .replace("{jobid}", String.valueOf(config.id))
+                    .replace("{status}", String.valueOf(config.status))
+                    .replace("{time}", String.valueOf(config.time))
+                    .replace("{date}", String.valueOf(config.date))
+            );
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

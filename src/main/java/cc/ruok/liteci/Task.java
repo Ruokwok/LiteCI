@@ -154,6 +154,7 @@ public class Task implements Runnable {
 
     public void success(BuildConfig config) {
         config.status = true;
+        Build.addBuild(job.getUUID(), config);
         job.getConfig().last_success = config.date;
         job.getConfig().last_time = config.time;
         job.getConfig().status = 1;

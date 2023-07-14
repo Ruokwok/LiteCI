@@ -43,4 +43,8 @@ public class Job extends Project {
     public File getBuild(int id) {
         return new File(workspace + "/build/" + id);
     }
+
+    public String getUUID() {
+        return getConfig().uuid;
+    }
 }
