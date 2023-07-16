@@ -244,9 +244,9 @@ public class ApiServlet extends ServerServlet {
                         f.name = file.getName();
                         f.size = file.length();
                         j.artifact.add(f);
-                        j.list = Build.getBuildList(job);
                     }
                 }
+                j.list = Build.getBuildList(job);
                 resp.getWriter().println(j);
             }
         } catch (Exception e) {
