@@ -89,6 +89,7 @@ public class Task implements Runnable {
             output(e.getMessage());
         }
         job.setBuilding(false);
+        Build.run();
     }
 
     public void setJob(Job job) {

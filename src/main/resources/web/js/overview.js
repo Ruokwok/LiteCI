@@ -49,18 +49,21 @@ var taskList;
 function queue() {
     post('api/queue', undefined, function (json) {
         console.log(json)
-        if (JSON.stringify(json) == taskList) {
-            return;
-        }
-        taskList = JSON.stringify(json);
-        $('#queue').text('');
-        for (var i in json.task) {
-            if (json.task[i].name == undefined) {
-                $('#queue').append('<li class="mdui-list-item mdui-ripple"><div class="mdui-list-item-content mdui-m-l-4"><div class="mdui-typo-body-1-opacity mdui-m-l-4"><em>{web.build.idle}</em></div></div></li>')
-            } else {
-                $('#queue').append('<li class="mdui-list-item mdui-ripple"><div class="mdui-list-item-icon mdui-spinner"></div><div class="mdui-list-item-content"><div><text class="mdui-m-r-4">'+ json.task[i].name +'</text><code>'+ json.task[i].thread +'</code></div></div></li>');
+        if (JSON.stringify(json) != taskList) {
+            taskList = JSON.stringify(json);
+            $('#task').text('');
+            for (var i in json.task) {
+                if (json.task[i].name == undefined) {
+                    $('#task').append('<li class="mdui-list-item mdui-ripple"><div class="mdui-list-item-content mdui-m-l-4"><div class="mdui-typo-body-1-opacity mdui-m-l-4"><em>' + i + '.{web.build.idle}</em></div></div></li>')
+                } else {
+                    $('#task').append('<li class="mdui-list-item mdui-ripple"><div class="mdui-list-item-icon mdui-spinner"></div><div class="mdui-list-item-content"><div><text class="mdui-m-r-4">'+ json.task[i].name +'</text><code>'+ json.task[i].thread +'</code></div></div></li>');
+                }
+            }
+            mdui.mutation();
+            $('#queue').text('');
+            for (var i in json.queue) {
+                $('#queue').append('<li class="mdui-list-item mdui-ripple"><i class="mdui-icon material-icons mdui-text-color-blue">do_not_disturb_on</i><div class="mdui-list-item-content mdui-m-l-2">' + json.queue[i] + '</div></li>')
             }
         }
-        mdui.mutation();
     });
 }

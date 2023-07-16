@@ -287,6 +287,7 @@ public class ApiServlet extends ServerServlet {
         try {
             QueueJson json = new QueueJson();
             json.task = Build.getTaskList();
+            json.queue = Build.getQueueList();
             resp.setStatus(200);
             resp.getWriter().println(json);
         } catch (Exception e) {

@@ -115,4 +115,8 @@ public class Build {
         return list;
     }
 
+    public static List<String> getQueueList() {
+        return BuildQueue.getQueueList();
+    }
+
 }

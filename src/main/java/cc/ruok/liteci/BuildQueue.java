@@ -3,6 +3,8 @@ package cc.ruok.liteci;
 import cc.ruok.liteci.i18n.L;
 import cc.ruok.liteci.project.Job;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 public class BuildQueue {
@@ -28,6 +30,14 @@ public class BuildQueue {
     public static Job get() {
         if (queue.isEmpty()) return null;
         return queue.get(0);
+    }
+
+    public static List<String> getQueueList() {
+        List<String> list = new ArrayList<>();
+        for (Job job : queue) {
+            list.add(job.getName());
+        }
+        return list;
     }
 
 }
