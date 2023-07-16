@@ -88,6 +88,7 @@ public class Task implements Runnable {
             e.printStackTrace();
             output(e.getMessage());
         }
+        job.setBuilding(false);
     }
 
     public void setJob(Job job) {
@@ -98,6 +99,7 @@ public class Task implements Runnable {
     }
 
     public void start() {
+        job.setBuilding(true);
         Logger.info(L.get("console.build.start") + ": " + job.getName());
         if (LiteCI.serverConfig.build_timeout > 0) {
             timer.schedule(new TimerTask() {

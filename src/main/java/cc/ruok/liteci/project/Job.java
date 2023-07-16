@@ -10,6 +10,7 @@ public class Job extends Project {
 
     private JobConfig config;
     private File workspace;
+    private boolean building;
 
     public Job(File file, Dir father) throws IOException {
         super(file, father);
@@ -50,5 +51,13 @@ public class Job extends Project {
 
     public String getName() {
         return name;
+    }
+
+    public boolean isBuilding() {
+        return building;
+    }
+
+    public void setBuilding(boolean building) {
+        this.building = building;
     }
 }

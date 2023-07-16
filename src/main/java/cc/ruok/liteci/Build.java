@@ -49,7 +49,7 @@ public class Build {
         Task task = getIdleTask();
         if (task == null) return;
         Job job = BuildQueue.get();
-        if (job != null) {
+        if (job != null && !job.isBuilding()) {
             task.setJob(job);
             task.start();
         }
