@@ -4,15 +4,12 @@ import cc.ruok.liteci.Build;
 import cc.ruok.liteci.BuildQueue;
 import cc.ruok.liteci.LiteCI;
 import cc.ruok.liteci.config.JobConfig;
-import cc.ruok.liteci.json.JobJson;
-import cc.ruok.liteci.json.JobListJson;
+import cc.ruok.liteci.json.*;
 import cc.ruok.liteci.project.Dir;
 import cc.ruok.liteci.project.Job;
 import cc.ruok.liteci.project.Project;
 import cc.ruok.liteci.User;
 import cc.ruok.liteci.i18n.L;
-import cc.ruok.liteci.json.DialogJson;
-import cc.ruok.liteci.json.Json;
 import cn.hutool.crypto.SecureUtil;
 import com.github.mervick.aes_everywhere.Aes256;
 import com.google.gson.Gson;
@@ -33,6 +30,7 @@ public class ApiServlet extends ServerServlet {
         map.put("/api/login", ApiServlet::login);
         map.put("/api/jobs", ApiServlet::getJobs);
         map.put("/api/info/job", ApiServlet::jobInfo);
+        map.put("/api/queue", ApiServlet::getQueue);
         map.put("/api1/setting/theme/get", ApiServlet::getTheme);
         map.put("/api1/setting/theme/set", ApiServlet::setTheme);
         map.put("/api1/create/dir", ApiServlet::createDir);
@@ -282,6 +280,17 @@ public class ApiServlet extends ServerServlet {
         Project project = Project.getProject(json.params.get("path"));
         if (project instanceof Job) {
             BuildQueue.add((Job) project);
+        }
+    }
+
+    public static void getQueue(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            QueueJson json = new QueueJson();
+            json.task = Build.getTaskList();
+            resp.setStatus(200);
+            resp.getWriter().println(json);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

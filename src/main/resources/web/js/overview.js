@@ -1,5 +1,14 @@
 localStorage.path = '/';
 update();
+var sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+const repeatedGreetings = async () => {
+  while (true) {
+    queue();
+    await sleep(2000);
+  }
+}
+repeatedGreetings()
+
 function update() {
     $("#job-list").text('');
     $("#job-loading").show();
@@ -34,4 +43,24 @@ function getIcon(list) {
     if (list.status == 0) return '<i class="mdui-icon material-icons mdui-text-color-blue">do_not_disturb_on</i>';
     if (list.status == 1) return '<i class="mdui-icon material-icons mdui-text-color-green">check_circle</i>';
     if (list.status == 2) return '<i class="mdui-icon material-icons mdui-text-color-red">error</i>';
+}
+
+var taskList;
+function queue() {
+    post('api/queue', undefined, function (json) {
+        console.log(json)
+        if (JSON.stringify(json) == taskList) {
+            return;
+        }
+        taskList = JSON.stringify(json);
+        $('#queue').text('');
+        for (var i in json.task) {
+            if (json.task[i].name == undefined) {
+                $('#queue').append('<li class="mdui-list-item mdui-ripple"><div class="mdui-list-item-content mdui-m-l-4"><div class="mdui-typo-body-1-opacity mdui-m-l-4"><em>{web.build.idle}</em></div></div></li>')
+            } else {
+                $('#queue').append('<li class="mdui-list-item mdui-ripple"><div class="mdui-list-item-icon mdui-spinner"></div><div class="mdui-list-item-content"><div><text class="mdui-m-r-4">'+ json.task[i].name +'</text><code>'+ json.task[i].thread +'</code></div></div></li>');
+            }
+        }
+        mdui.mutation();
+    });
 }

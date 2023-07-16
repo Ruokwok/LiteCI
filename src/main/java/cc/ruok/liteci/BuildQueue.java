@@ -1,5 +1,6 @@
 package cc.ruok.liteci;
 
+import cc.ruok.liteci.i18n.L;
 import cc.ruok.liteci.project.Job;
 
 import java.util.Vector;
@@ -11,6 +12,7 @@ public class BuildQueue {
     public static boolean add(Job job) {
         if (queue.contains(job)) return false;
         queue.add(job);
+        Logger.info(job.getName() + L.get("console.build.add.queue"));
         Build.run();
         return true;
     }

@@ -47,4 +47,8 @@ public class Job extends Project {
     public String getUUID() {
         return getConfig().uuid;
     }
+
+    public String getName() {
+        return name;
+    }
 }

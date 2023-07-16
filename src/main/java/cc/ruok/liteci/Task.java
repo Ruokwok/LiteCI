@@ -5,7 +5,6 @@ import cc.ruok.liteci.i18n.L;
 import cc.ruok.liteci.pipe.Pipeline;
 import cc.ruok.liteci.project.Job;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +21,7 @@ public class Task implements Runnable {
     private StringBuffer output;
     private Timer timer = new Timer();
     private File terminal;
+    private int taskId;
 
     private static String and;
     private static String charset;
@@ -35,6 +35,10 @@ public class Task implements Runnable {
             and = ";";
             charset = "utf8";
         }
+    }
+
+    public Task(int taskId) {
+        this.taskId = taskId;
     }
 
     @Override
@@ -94,6 +98,7 @@ public class Task implements Runnable {
     }
 
     public void start() {
+        Logger.info(L.get("console.build.start") + ": " + job.getName());
         if (LiteCI.serverConfig.build_timeout > 0) {
             timer.schedule(new TimerTask() {
                 @Override
@@ -103,6 +108,7 @@ public class Task implements Runnable {
             }, LiteCI.serverConfig.build_timeout);
         }
         thread = new Thread(this);
+        thread.setName("BuildTask-" + taskId);
         thread.start();
     }
 
@@ -174,6 +180,7 @@ public class Task implements Runnable {
                 }
             }
         }
+        Logger.info(L.get("console.build.success") + ": " + job.getName() + "(" + id + ")");
     }
 
     public void fail(BuildConfig config) {
@@ -186,6 +193,10 @@ public class Task implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Job getJob() {
+        return job;
     }
 
 }

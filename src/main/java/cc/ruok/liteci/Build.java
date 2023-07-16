@@ -3,6 +3,7 @@ package cc.ruok.liteci;
 import cc.ruok.liteci.config.BuildConfig;
 import cc.ruok.liteci.i18n.L;
 import cc.ruok.liteci.json.JobJson;
+import cc.ruok.liteci.json.QueueJson;
 import cc.ruok.liteci.project.Job;
 import org.h2.jdbc.JdbcSQLNonTransientConnectionException;
 
@@ -19,7 +20,7 @@ public class Build {
 
     public static void init() {
         for (int i = 0; i < LiteCI.serverConfig.task_count; i++) {
-            tasks.add(new Task());
+            tasks.add(new Task(i));
         }
         try {
             Class.forName("org.h2.Driver");
@@ -95,6 +96,23 @@ public class Build {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static List<QueueJson.Task> getTaskList() {
+        List<QueueJson.Task> list = new ArrayList<>();
+        try {
+            for (Task task : tasks) {
+                QueueJson.Task t = new QueueJson.Task();
+                if (task.isActive()) {
+                    t.name = task.getJob().getName();
+                    t.thread = task.getThread().getName();
+                }
+                list.add(t);
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
 }
