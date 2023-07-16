@@ -19,6 +19,7 @@ public class JobConfig extends Config {
     public String workspace;
     public String description = "";
     public String path;
+    public int success_id;
     public List<String> shell;
     public Webhook webhook = new Webhook();
     public Cron cron = new Cron();

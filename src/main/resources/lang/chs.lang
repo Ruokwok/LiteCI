@@ -83,6 +83,7 @@ project.read.fail=读取项目失败，请检查配置文件
 console.build.delete.artifact.fail=删除旧的归档文件失败，文件可能被占用
 console.build.copy.artifact.fail=保存归档文件失败
 console.build.success=构建成功
+console.build.success=构建失败
 console.build.start=开始构建任务
 console.build.add.queue=添加到构建队列
 console.database.lock=数据库文件被占用，请在其他进程释放锁后启动LiteCI

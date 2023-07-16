@@ -106,7 +106,7 @@ public class Pipeline {
 
     public void kill() throws IOException {
         if (System.getProperty("os.name").contains("Windows")) {
-            Runtime.getRuntime().exec("tskill " + process.pid());
+            Runtime.getRuntime().exec("cmd /C taskkill /f /pid " + process.pid());
         } else {
             Runtime.getRuntime().exec("kill -9 " + process.pid());
         }

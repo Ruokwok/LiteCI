@@ -233,7 +233,7 @@ public class ApiServlet extends ServerServlet {
                 j.date = job.getConfig().last_success;
                 j.time = job.getConfig().last_time;
                 j.description = job.getDescription();
-                File build = job.getBuild(job.getConfig().length);
+                File build = job.getBuild(job.getConfig().success_id);
                 File arti = new File(build + "/artifacts");
                 if (arti.exists() && arti.isDirectory() && arti.listFiles() != null && Objects.requireNonNull(arti.listFiles()).length > 0) {
                     j.artifact = new ArrayList<>();

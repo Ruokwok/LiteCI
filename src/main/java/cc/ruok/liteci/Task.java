@@ -108,7 +108,7 @@ public class Task implements Runnable {
                 public void run() {
                     timeout();
                 }
-            }, LiteCI.serverConfig.build_timeout);
+            }, LiteCI.serverConfig.build_timeout * 1000);
         }
         thread = new Thread(this);
         thread.setName("BuildTask-" + taskId);
@@ -160,6 +160,7 @@ public class Task implements Runnable {
         config.status = true;
         Build.addBuild(job.getUUID(), config);
         job.getConfig().last_success = config.date;
+        job.getConfig().success_id = id;
         job.getConfig().last_time = config.time;
         job.getConfig().status = 1;
         try {
@@ -188,6 +189,7 @@ public class Task implements Runnable {
 
     public void fail(BuildConfig config) {
         config.status = false;
+        Build.addBuild(job.getUUID(), config);
         job.getConfig().last_fail = config.date;
         job.getConfig().status = 2;
         try {
@@ -196,6 +198,7 @@ public class Task implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Logger.info(L.get("console.build.fail") + ": " + job.getName() + "(" + id + ")");
     }
 
     public Job getJob() {
