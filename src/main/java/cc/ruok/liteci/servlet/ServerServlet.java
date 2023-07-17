@@ -4,13 +4,16 @@ import cc.ruok.liteci.LiteCI;
 import cc.ruok.liteci.User;
 import cc.ruok.liteci.i18n.Format;
 import cc.ruok.liteci.i18n.L;
+import cc.ruok.liteci.project.Job;
 import cc.ruok.liteci.project.Project;
+import cn.hutool.core.util.StrUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -30,6 +33,7 @@ public class ServerServlet extends HttpServlet {
         htmlMap.put("/setting/build", L.format(Format.res("setting-build", html)));
         htmlMap.put("/job/dir", L.format(Format.res("dir", html)));
         htmlMap.put("/job/job", L.format(Format.res("job", html)));
+        htmlMap.put("/build", L.format(Format.res("build", html)));
         htmlMap.put("/edit/job", L.format(Format.res("edit-job", html)));
         htmlMap.put("/new-job", L.format(Format.res("new-job", html)));
         htmlMap.put("/login", L.format(getResourcesToString("login.html")));
@@ -47,6 +51,7 @@ public class ServerServlet extends HttpServlet {
         privateUrl.add("/new-job");
         privateUrl.add("/job");
         privateUrl.add("/edit");
+        privateUrl.add("/build");
     }
 
     protected static InputStream getResources(String path) {
@@ -92,6 +97,28 @@ public class ServerServlet extends HttpServlet {
                     resp.getWriter().println(jhtml);
                 }
             } else  {
+                resp.setStatus(200);
+                resp.getWriter().println(redirect("/login"));
+            }
+        } else if (path.startsWith("/build/")) {
+            if (checkPermission("/build", req.getSession().getId())) {
+                String[] split = path.split("/");
+                int id = Integer.parseInt(split[split.length - 1]);
+                String _path = StrUtil.removeSuffix(path.substring(6), "/" + id);
+                Project project = Project.getProject(_path);
+                if (project instanceof Job) {
+                    Job job = (Job) project;
+                    File file = new File(job.getWorkspace() + "/build/" + id);
+                    if (file.isDirectory()) {
+                        resp.setStatus(200);
+                        resp.getWriter().println(htmlMap.get("/build"));
+                        return;
+                    }
+                    return;
+                }
+                resp.setStatus(404);
+                resp.getWriter().println(error);
+            } else {
                 resp.setStatus(200);
                 resp.getWriter().println(redirect("/login"));
             }
