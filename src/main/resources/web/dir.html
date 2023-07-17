@@ -1,8 +1,11 @@
 <div class="mdui-row mdui-typo mdui-p-t-4">
     <div class="mdui-col-sm-12 mdui-col-offset-sm-0">
         <div class="mdui-typo-title mdui-m-b-2">
-            <text id="name"></text>
-            <button class="mdui-btn mdui-color-theme-accent mdui-shadow-2 mdui-ripple mdui-float-right" onclick="edit()" id="btn">{web.edit.description}</button>
+            <text id="name">&nbsp;</text>
+            <div class="mdui-float-right">
+                <button class="mdui-btn mdui-color-red mdui-shadow-2 mdui-ripple mdui-m-r-1" onclick="remove()">{web.delete.dir}</button>
+                <button class="mdui-btn mdui-color-theme-accent mdui-shadow-2 mdui-ripple" onclick="edit()" id="btn">{web.edit.description}</button>
+            </div>
         </div>
         <div class="mdui-card mdui-m-b-2 mdui-p-l-3 mdui-p-r-3" style="display: none" id="edit">
             <div class="mdui-textfield mdui-textfield-floating-label mdui-m-t-0">

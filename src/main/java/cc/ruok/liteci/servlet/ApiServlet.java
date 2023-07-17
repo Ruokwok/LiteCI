@@ -40,6 +40,7 @@ public class ApiServlet extends ServerServlet {
         map.put("/api2/edit/job", ApiServlet::editJob);
         map.put("/api2/get/job", ApiServlet::getConfig);
         map.put("/api2/remove/job", ApiServlet::removeJob);
+        map.put("/api2/remove/dir", ApiServlet::removeDir);
     }
 
     @Override
@@ -259,19 +260,41 @@ public class ApiServlet extends ServerServlet {
             Project project = Project.getProject(json.params.get("path"));
             if (project instanceof Job) {
                 Job job = (Job) project;
-                Dir up = job.getUp();
-                up.getSons().remove(job.name);
-                FileUtils.delete(job.getFile());
-                FileUtils.delete(job.getWorkspace());
-                Runtime.getRuntime().gc();
-                json.params.put("status", "success");
-                resp.getWriter().println(json);
+                if (job.isBuilding()) {
+                    resp.getWriter().println(new DialogJson(L.get("web.remove.job.cancel")));
+                    return;
+                }
+                if (Project.removeJob(job)) {
+                    json.params.put("status", "success");
+                    resp.getWriter().println(json);
+                }
             } else {
                 throw new Exception();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            resp.getWriter().println(new DialogJson(L.get("project.target.read.fail")));
+            resp.getWriter().println(new DialogJson(L.get("project.fail.console")));
+        }
+    }
+
+    public static void removeDir(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            Json json = new Gson().fromJson(str, Json.class);
+            Project project = Project.getProject(json.params.get("path"));
+            if (project.isDir()) {
+                Dir dir = (Dir) project;
+                if (dir.isRoot()) {
+                    resp.getWriter().println(L.get("web.remove.dir.root"));
+                    return;
+                }
+                if (Project.removeDir(dir)) {
+                    json.params.put("status", "success");
+                    resp.getWriter().println(json);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.getWriter().println(new DialogJson(L.get("project.fail.console")));
         }
     }
 

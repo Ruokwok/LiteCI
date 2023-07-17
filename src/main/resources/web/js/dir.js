@@ -87,3 +87,28 @@ function save() {
         dataType:"json",
     });
 }
+
+function remove() {
+    mdui.dialog({
+        title: '{web.remove.dir.ask}',
+        content: '{web.remove.dir.ask.c}',
+        buttons: [
+            {
+                text: '{web.no}',
+            },
+            {
+                text: '{web.yes}',
+                onClick: function (inst) {
+                    var data = {};
+                    data.params = {};
+                    data.params.path = window.location.pathname.substring(4).replace("%20", " ");
+                    post('/api2/remove/dir', data, function (json) {
+                        if (json.params.status == 'success') {
+                            asyncGoto('/');
+                        }
+                    });
+                }
+            }
+        ]
+    });
+}

@@ -1,12 +1,17 @@
 package cc.ruok.liteci.project;
 
+import cc.ruok.liteci.Build;
 import cc.ruok.liteci.LiteCI;
 import cc.ruok.liteci.config.Description;
 import cc.ruok.liteci.config.JobConfig;
 import cc.ruok.liteci.i18n.L;
+import cc.ruok.liteci.json.DialogJson;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.UUID;
 
@@ -128,4 +133,56 @@ public abstract class Project {
         saveDir(tree);
     }
 
+    public static boolean removeJob(Job job) throws IOException {
+        if (job.isBuilding()) return false;
+        Dir up = job.getUp();
+        up.getSons().remove(job.name);
+        FileUtils.delete(job.getFile());
+        FileUtils.delete(job.getWorkspace());
+        Runtime.getRuntime().gc();
+        try {
+            Build.execute("DELETE FROM build WHERE uuid='" + job.getUUID() + "';");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public static boolean removeDir(Dir dir) throws IOException {
+        if (dir.isRoot()) return false;
+        if (isBuilding(dir)) {
+            return false;
+        }
+        ArrayList<Job> list = new ArrayList<>();
+        getJobList(dir, list);
+        for (Job job : list) {
+            removeJob(job);
+        }
+        dir.getUp().getSons().remove(dir.name);
+        FileUtils.deleteDirectory(dir.getFile());
+        return true;
+    }
+
+    public static boolean isBuilding(Project project) {
+        if (project instanceof Job) {
+            return ((Job) project).isBuilding();
+        } else if (project instanceof Dir) {
+            for (Map.Entry<String, Project> entry : ((Dir) project).getSons().entrySet()) {
+                if (isBuilding(entry.getValue())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static void getJobList(Dir dir, ArrayList<Job> list) {
+        for (Map.Entry<String, Project> entry : dir.getSons().entrySet()) {
+            if (entry.getValue() instanceof Job) {
+                list.add((Job) entry.getValue());
+            } else if (entry.getValue() instanceof Dir) {
+                getJobList((Dir) entry.getValue(), list);
+            }
+        }
+    }
 }

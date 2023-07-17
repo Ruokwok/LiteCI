@@ -119,4 +119,11 @@ public class Build {
         return BuildQueue.getQueueList();
     }
 
+    public static boolean execute(String sql) throws SQLException {
+        Statement stat = conn.createStatement();
+        boolean b = stat.execute(sql);
+        stat.close();
+        return b;
+    }
+
 }

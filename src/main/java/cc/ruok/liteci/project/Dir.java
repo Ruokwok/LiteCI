@@ -54,4 +54,8 @@ public class Dir extends Project {
     public Map<String, Project> getSons() {
         return internal;
     }
+
+    public boolean isRoot() {
+        return name.equals("/");
+    }
 }
