@@ -72,6 +72,7 @@ public abstract class Project {
 
     public static String checkPath(String path, String name) {
         path = path.replaceAll("%20", " ");
+        path = path.replaceAll("\\+", " ");
         if (path == null || path.isEmpty()) return L.get("project.path.null");
         if (name == null || name.isEmpty()) return L.get("project.name.null");
         File file = new File(LiteCI.JOBS + path);
@@ -81,6 +82,7 @@ public abstract class Project {
 
     public static String createDir(String path, String name) {
         path = path.replaceAll("%20", " ");
+        path = path.replaceAll("\\+", " ");
         String s = checkPath(path, name);
         if (s != null) return s;
         File file = new File(LiteCI.JOBS + path + "/" + name);

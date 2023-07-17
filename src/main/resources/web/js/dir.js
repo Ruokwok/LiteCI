@@ -1,4 +1,4 @@
-localStorage.path = window.location.pathname.substring(4).replace("%20", " ");
+localStorage.path = window.location.pathname.substring(4).replaceAll("%20", " ");
 update()
 var up_path;
 function update() {
