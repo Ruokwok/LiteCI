@@ -1,15 +1,12 @@
 package cc.ruok.liteci.servlet;
 
-import cc.ruok.liteci.Build;
-import cc.ruok.liteci.BuildQueue;
-import cc.ruok.liteci.LiteCI;
+import cc.ruok.liteci.*;
 import cc.ruok.liteci.config.BuildConfig;
 import cc.ruok.liteci.config.JobConfig;
 import cc.ruok.liteci.json.*;
 import cc.ruok.liteci.project.Dir;
 import cc.ruok.liteci.project.Job;
 import cc.ruok.liteci.project.Project;
-import cc.ruok.liteci.User;
 import cc.ruok.liteci.i18n.L;
 import cn.hutool.crypto.SecureUtil;
 import com.github.mervick.aes_everywhere.Aes256;
@@ -328,8 +325,9 @@ public class ApiServlet extends ServerServlet {
             int id = Integer.parseInt(json.params.get("id"));
             if (project instanceof Job) {
                 Job job = (Job) project;
+                Task task = job.getTask();
                 BuildConfig build = job.getBuild(id);
-                if (build == null) {
+                if (task == null && build == null || build == null && task.getBuildId() != id) {
                     json.params.put("message", L.get("web.build.null"));
                     resp.getWriter().println(json);
                 } else {
@@ -337,8 +335,30 @@ public class ApiServlet extends ServerServlet {
                     bj.params.put("message", "success");
                     bj.name = job.getName();
                     bj.id = id;
-                    bj.status = job.isBuilding()? 0: build.status ? 1 : 2;
-                    bj.output = FileUtils.readFileToString(new File(job.getBuildDir(id) + "/terminal.txt"), "utf8").split("\n");
+                    if (task != null && task.getBuildId() == id) {
+                        bj.status = 0;
+                        bj.output = task.getOutput().split("\n");
+                    } else {
+                        bj.status = build.status ? 1 : 2;
+                        bj.output = FileUtils.readFileToString(new File(job.getBuildDir(id) + "/terminal.txt"), "utf8").split("\n");
+                        bj.date = build.date;
+                        bj.time = build.time;
+                        File file = new File(job.getBuildDir(id) + "/artifacts");
+                        if (file.isDirectory()) {
+                            File[] fs = file.listFiles();
+                            if (fs.length > 0) {
+                                bj.artifacts = new ArrayList<>();
+                                for (File f : fs) {
+                                    if (f.isFile()) {
+                                        JobJson.File _f = new JobJson.File();
+                                        _f.name = f.getName();
+                                        _f.size = f.length();
+                                        bj.artifacts.add(_f);
+                                    }
+                                }
+                            }
+                        }
+                    }
                     resp.setStatus(200);
                     resp.getWriter().println(bj);
                 }

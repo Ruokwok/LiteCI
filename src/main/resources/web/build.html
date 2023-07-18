@@ -7,24 +7,27 @@
     </div>
     <div class="mdui-col-sm-12 mdui-col-offset-sm-0" id="card">
         <div class="mdui-typo-title mdui-m-b-1">
-            <text id="name">&nbsp;</text>
+            <text id="name">Loading...</text>
             <div class="mdui-float-right">
                 <text id="icon"></text>
                 <text id="id"></text>
             </div>
         </div>
+        <div class="mdui-progress" id="b-loading">
+            <div class="mdui-progress-indeterminate"></div>
+        </div>
         <div class="mdui-card mdui-shadow-2 mdui-p-a-2">
             <div class="mdui-typo-subheading"><strong>{web.build.target}</strong></div>
             <div class="mdui-m-l-4 mdui-m-t-3">
                 <lu id="artifact">
-                    <li><a href="#">文件.jar</a><small class="mdui-m-l-2">15.42 MB</small></li>
+                    <li>{web.none}</li>
                 </lu>
             </div>
             <div class="mdui-typo-subheading mdui-m-t-2"><strong>{web.build.info}</strong></div>
-            <div class="mdui-type-subheading-opacity">{web.build.stamp}<code class="mdui-m-l-2" id="date">2023-01-05 13:06:12</code></div>
-            <div class="mdui-type-subheading-opacity">{web.build.time}<code class="mdui-m-l-2" id="time">1 min 15 sec</code></div>
-            <div class="mdui-type-subheading-opacity">{web.build.exit}<code class="mdui-m-l-2" id="exit">0</code></div>
-            <div class="mdui-type-subheading-opacity">{web.build.trigger}<code class="mdui-m-l-2" id="trigger">0</code></div>
+            <div class="mdui-type-subheading-opacity">{web.build.stamp}<code class="mdui-m-l-2" id="date"></code></div>
+            <div class="mdui-type-subheading-opacity">{web.build.time}<code class="mdui-m-l-2" id="time"></code></div>
+            <div class="mdui-type-subheading-opacity">{web.build.exit}<code class="mdui-m-l-2" id="exit"></code></div>
+            <div class="mdui-type-subheading-opacity">{web.build.trigger}<code class="mdui-m-l-2" id="trigger"></code></div>
         </div>
         <div class="mdui-card mdui-shadow-2 mdui-p-a-2 mdui-m-t-2">
             <div class="mdui-typo-subheading"><strong>{web.build.change}</strong></div>
@@ -36,4 +39,7 @@
     </div>
 </div>
 <link rel="stylesheet" href="https://unpkg.com/xterm@4.11.0/css/xterm.css" />
-<script src="https://unpkg.com/xterm@4.11.0/lib/xterm.js"></script>
+<!--<script src="https://unpkg.com/xterm@4.11.0/lib/xterm.js"></script>-->
+<!--<script src="https://unpkg.com/xterm-addon-fit@0.7.0/lib/xterm-addon-fit.js"></script>-->
+<script src="https://cdn.bootcdn.net/ajax/libs/xterm/3.9.2/xterm.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/xterm/3.9.2/addons/fit/fit.min.js"></script>

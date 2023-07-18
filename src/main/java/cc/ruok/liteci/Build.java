@@ -106,6 +106,7 @@ public class Build {
                 if (task.isActive()) {
                     t.name = task.getJob().getName();
                     t.thread = task.getThread().getName();
+                    t.id = task.getBuildId();
                 }
                 list.add(t);
             }

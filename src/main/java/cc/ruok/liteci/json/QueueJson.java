@@ -11,6 +11,7 @@ public class QueueJson extends Json {
 
         public String name;
         public String thread;
+        public int id;
 
     }
 

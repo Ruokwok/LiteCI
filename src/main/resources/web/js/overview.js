@@ -56,7 +56,7 @@ function queue() {
                 if (json.task[i].name == undefined) {
                     $('#task').append('<li class="mdui-list-item mdui-ripple"><div class="mdui-list-item-content mdui-m-l-4"><div class="mdui-typo-body-1-opacity mdui-m-l-4"><em>' + i + '.{web.build.idle}</em></div></div></li>')
                 } else {
-                    $('#task').append('<li class="mdui-list-item mdui-ripple"><div class="mdui-list-item-icon mdui-spinner"></div><div class="mdui-list-item-content"><div><text class="mdui-m-r-4">'+ json.task[i].name +'</text><code>'+ json.task[i].thread +'</code></div></div></li>');
+                    $('#task').append('<li class="mdui-list-item mdui-ripple"><div class="mdui-list-item-icon mdui-spinner"></div><div class="mdui-list-item-content"><div><text class="mdui-m-r-4">'+ json.task[i].name + '#' + json.task[i].id + '</text><code>'+ json.task[i].thread +'</code></div></div></li>');
                 }
             }
             mdui.mutation();

@@ -1,5 +1,6 @@
 package cc.ruok.liteci.project;
 
+import cc.ruok.liteci.Task;
 import cc.ruok.liteci.config.BuildConfig;
 import cc.ruok.liteci.config.Config;
 import cc.ruok.liteci.config.JobConfig;
@@ -14,6 +15,7 @@ public class Job extends Project {
     private JobConfig config;
     private File workspace;
     private boolean building;
+    private Task task;
 
     public Job(File file, Dir father) throws IOException {
         super(file, father);
@@ -70,7 +72,12 @@ public class Job extends Project {
         return building;
     }
 
-    public void setBuilding(boolean building) {
-        this.building = building;
+    public void setBuilding(Task task) {
+        this.task = task;
+        this.building = task != null;
+    }
+
+    public Task getTask() {
+        return task;
     }
 }

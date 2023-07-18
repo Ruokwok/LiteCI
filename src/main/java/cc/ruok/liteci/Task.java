@@ -22,10 +22,10 @@ public class Task implements Runnable {
     private Timer timer = new Timer();
     private File terminal;
     private int taskId;
+    private int buildId;
 
     private static String and;
     private static String charset;
-    private int id;
 
     static {
         if (System.getProperty("os.name").contains("Windows")) {
@@ -47,8 +47,7 @@ public class Task implements Runnable {
         if (!work.exists()) work.mkdir();
         if (!build.exists()) build.mkdir();
 
-        id = job.getConfig().length + 1;
-        terminal = new File(build + "/" + id + "/terminal.txt");
+        terminal = new File(build + "/" + buildId + "/terminal.txt");
         if (job.getConfig().artifact.enable) {
             for (String f : job.getConfig().artifact.files) {
                 File file = new File(work + "/" + f);
@@ -71,14 +70,14 @@ public class Task implements Runnable {
         pipe.setCommand((System.getProperty("os.name").contains("Windows") ? "cmd /C" : "") + formatShell(job));
         try {
             int exit = pipe.run();
-            job.getConfig().length = id;
+            job.getConfig().length = buildId;
             job.save();
             File file = new File(build + "/" + job.getConfig().length);
             file.mkdir();
             BuildConfig config = new BuildConfig(new File(file + "/build.json"));
             config.date = System.currentTimeMillis();
             config.time = System.currentTimeMillis() - start;
-            config.id = id;
+            config.id = buildId;
             if (exit == 0) {
                 success(config);
             } else {
@@ -88,7 +87,7 @@ public class Task implements Runnable {
             e.printStackTrace();
             output(e.getMessage());
         }
-        job.setBuilding(false);
+        job.setBuilding(null);
         Build.run();
     }
 
@@ -100,8 +99,9 @@ public class Task implements Runnable {
     }
 
     public void start() {
-        job.setBuilding(true);
-        Logger.info(L.get("console.build.start") + ": " + job.getName());
+        job.setBuilding(this);
+        buildId = job.getConfig().length + 1;
+        Logger.info(L.get("console.build.start") + ": " + job.getName() + "(#" + buildId + ")");
         if (LiteCI.serverConfig.build_timeout > 0) {
             timer.schedule(new TimerTask() {
                 @Override
@@ -160,7 +160,7 @@ public class Task implements Runnable {
         config.status = true;
         Build.addBuild(job.getUUID(), config);
         job.getConfig().last_success = config.date;
-        job.getConfig().success_id = id;
+        job.getConfig().success_id = buildId;
         job.getConfig().last_time = config.time;
         job.getConfig().status = 1;
         try {
@@ -184,7 +184,7 @@ public class Task implements Runnable {
                 }
             }
         }
-        Logger.info(L.get("console.build.success") + ": " + job.getName() + "(" + id + ")");
+        Logger.info(L.get("console.build.success") + ": " + job.getName() + "(#" + buildId + ")");
     }
 
     public void fail(BuildConfig config) {
@@ -198,11 +198,19 @@ public class Task implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Logger.info(L.get("console.build.fail") + ": " + job.getName() + "(" + id + ")");
+        Logger.info(L.get("console.build.fail") + ": " + job.getName() + "(#" + build + ")");
     }
 
     public Job getJob() {
         return job;
     }
 
+    public int getBuildId() {
+        if (isIdle()) return 0;
+        return buildId;
+    }
+
+    public String getOutput() {
+        return output.toString();
+    }
 }
