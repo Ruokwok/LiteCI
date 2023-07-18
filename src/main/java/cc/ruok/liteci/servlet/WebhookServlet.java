@@ -1,6 +1,7 @@
 package cc.ruok.liteci.servlet;
 
 import cc.ruok.liteci.BuildQueue;
+import cc.ruok.liteci.config.BuildConfig;
 import cc.ruok.liteci.project.Job;
 import cc.ruok.liteci.project.Project;
 import jakarta.servlet.ServletException;
@@ -19,7 +20,7 @@ public class WebhookServlet extends ServerServlet {
             Job job = (Job) project;
             if (job.getConfig().webhook.enable) {
                 if (job.getConfig().webhook.token.equals(req.getParameter("token"))) {
-                    BuildQueue.add(job);
+                    BuildQueue.add(job, new BuildConfig.Trigger(1, "Github"));
                     resp.setStatus(200);
                     resp.getWriter().println("{ status: 'success', code: 200}");
                     return;

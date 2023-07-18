@@ -305,7 +305,7 @@ public class ApiServlet extends ServerServlet {
         Json json = new Gson().fromJson(str, Json.class);
         Project project = Project.getProject(json.params.get("path"));
         if (project instanceof Job) {
-            BuildQueue.add((Job) project);
+            BuildQueue.add((Job) project, new BuildConfig.Trigger(0, LiteCI.getOnlineUser(req.getSession().getId()).getName()));
         }
         resp.setStatus(200);
         resp.getWriter().println("{}");

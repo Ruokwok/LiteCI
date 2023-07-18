@@ -23,6 +23,7 @@ public class Task implements Runnable {
     private File terminal;
     private int taskId;
     private int buildId;
+    private BuildConfig.Trigger trigger;
 
     private static String and;
     private static String charset;
@@ -79,6 +80,7 @@ public class Task implements Runnable {
             config.time = System.currentTimeMillis() - start;
             config.id = buildId;
             config.exit = exit;
+            config.trigger = trigger;
             if (exit == 0) {
                 success(config);
             } else {
@@ -213,5 +215,13 @@ public class Task implements Runnable {
 
     public String getOutput() {
         return output.toString();
+    }
+
+    public BuildConfig.Trigger getTrigger() {
+        return trigger;
+    }
+
+    public void setTrigger(BuildConfig.Trigger trigger) {
+        this.trigger = trigger;
     }
 }

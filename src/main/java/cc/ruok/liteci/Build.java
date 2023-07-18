@@ -48,9 +48,10 @@ public class Build {
         if (BuildQueue.isEmpty()) return;
         Task task = getIdleTask();
         if (task == null) return;
-        Job job = BuildQueue.get();
-        if (job != null && !job.isBuilding()) {
-            task.setJob(job);
+        BuildQueue.Map map = BuildQueue.get();
+        if (map != null && !map.job.isBuilding()) {
+            task.setJob(map.job);
+            task.setTrigger(map.trigger);
             task.start();
         }
     }

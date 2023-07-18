@@ -14,6 +14,7 @@ public class BuildConfig extends Config {
     public int exit;
     public List<Commit> commits;
     public List<String> artifacts;
+    public Trigger trigger;
 
     public BuildConfig(File file) {
         this.file = file;
@@ -36,6 +37,11 @@ public class BuildConfig extends Config {
 
         public int type;
         public String content;
+
+        public Trigger(int type, String content) {
+            this.type = type;
+            this.content = content;
+        }
 
     }
 }
