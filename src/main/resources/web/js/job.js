@@ -4,13 +4,18 @@ function edit() {
 }
 
 function build() {
-    post('/api1/build', { params: { path: localStorage.path}});
+    post('/api1/build', { params: { path: localStorage.path}}, function (json) {
+        console.log(json)
+        console.log(123)
+        asyncGoto(window.location.pathname);
+    });
 }
 
 update();
 function update() {
     post('/api/info/job', { params: { path: localStorage.path}}, function (json) {
         console.log(json)
+        $("#b-loading").hide();
         $('#name').text(json.name);
         $('#date').text(toDate(json.date));
         $('#time').html(toTime(json.time));
@@ -22,10 +27,14 @@ function update() {
             $('#artifact').append('<li>{web.none}</li>');
         } else {
             for (var i in json.artifact) {
-                $('#artifact').append('<li><a href="#">' + json.artifact[i].name + '</a><small class="mdui-m-l-2">' + json.artifact[i].size + '</small></li>')
+                $('#artifact').append('<li><a href="#">' + json.artifact[i].name + '</a><small class="mdui-m-l-2">' + json.artifact[i].size + '</small></li>');
             }
         }
         $('#builds').text('');
+        if (json.building > 0) {
+            $('#builds').append('<li class="mdui-list-item mdui-ripple mdui-m-a-0" onclick="goto(\'/build' + localStorage.path + '/' + json.building + '\')"><div class="mdui-list-item-icon mdui-spinner"></div><div class="mdui-list-item-content"><text>#' + json.building + '</text></div></li>');
+            mdui.mutation();
+        }
         for (var i in json.list) {
             $('#builds').append('<li class="mdui-list-item mdui-ripple mdui-m-a-0" onclick="goto(\'/build' + localStorage.path + '/' + json.list[i].id + '\')"><i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-' + (json.list[i].status ? 'green':'red') + '">' + (json.list[i].status ? 'check_circle' : 'error') + '</i><div class="mdui-list-item-content"><text>#' + json.list[i].id + '</text><code class="mdui-m-l-3">' + toDate(json.list[i].date) + '</code></div></li>');
         }

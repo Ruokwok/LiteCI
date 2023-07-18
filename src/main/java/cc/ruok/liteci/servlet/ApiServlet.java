@@ -246,6 +246,9 @@ public class ApiServlet extends ServerServlet {
                     }
                 }
                 j.list = Build.getBuildList(job);
+                if (job.isBuilding()) {
+                    j.building = job.getTask().getBuildId();
+                }
                 resp.getWriter().println(j);
             }
         } catch (Exception e) {
@@ -304,6 +307,8 @@ public class ApiServlet extends ServerServlet {
         if (project instanceof Job) {
             BuildQueue.add((Job) project);
         }
+        resp.setStatus(200);
+        resp.getWriter().println("{}");
     }
 
     public static void getQueue(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {

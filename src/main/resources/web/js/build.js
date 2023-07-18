@@ -52,7 +52,7 @@ function update() {
             for (var i in json.output) {
                 term.writeln(json.output[i]);
             }
-            if (json.artifact != undefined && json.artifacts.length > 0) {
+            if (json.artifacts != undefined && json.artifacts.length > 0) {
                 $("#artifact").text('');
                 for (var i in json.artifacts) {
                     $("#artifact").append('<li><a href="#">' + json.artifacts[i].name + '</a><small class="mdui-m-l-2">' + json.artifacts[i].size + '</small></li>');

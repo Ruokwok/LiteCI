@@ -10,6 +10,7 @@ public class JobJson extends Json {
     public String description;
     public List<File> artifact;
     public List<Info> list;
+    public int building;
 
     public static class File {
 
