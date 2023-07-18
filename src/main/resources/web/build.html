@@ -1,10 +1,16 @@
 <div class="mdui-row mdui-typo mdui-p-t-4">
-    <div class="mdui-col-sm-12 mdui-col-offset-sm-0">
+    <div class="mdui-typo" id="error" style="display:none">
+        <blockquote class="mdui-color-red mdui-p-a-2">
+            <p>{web.error}</p>
+            <footer class="mdui-text-color-white" id="warning"></footer>
+        </blockquote>
+    </div>
+    <div class="mdui-col-sm-12 mdui-col-offset-sm-0" id="card">
         <div class="mdui-typo-title mdui-m-b-1">
-            <text>标题</text>
+            <text id="name">&nbsp;</text>
             <div class="mdui-float-right">
-                <i class="mdui-icon material-icons mdui-text-color-green">check_circle</i>
-                <text>#71</text>
+                <text id="icon"></text>
+                <text id="id"></text>
             </div>
         </div>
         <div class="mdui-card mdui-shadow-2 mdui-p-a-2">
@@ -18,13 +24,14 @@
             <div class="mdui-type-subheading-opacity">{web.build.stamp}<code class="mdui-m-l-2" id="date">2023-01-05 13:06:12</code></div>
             <div class="mdui-type-subheading-opacity">{web.build.time}<code class="mdui-m-l-2" id="time">1 min 15 sec</code></div>
             <div class="mdui-type-subheading-opacity">{web.build.exit}<code class="mdui-m-l-2" id="exit">0</code></div>
-            <div class="mdui-type-subheading-opacity">{web.build.trigger}<code class="mdui-m-l-2" id="exit">0</code></div>
+            <div class="mdui-type-subheading-opacity">{web.build.trigger}<code class="mdui-m-l-2" id="trigger">0</code></div>
         </div>
         <div class="mdui-card mdui-shadow-2 mdui-p-a-2 mdui-m-t-2">
             <div class="mdui-typo-subheading"><strong>{web.build.change}</strong></div>
         </div>
         <div class="mdui-card mdui-shadow-2 mdui-p-a-2 mdui-m-t-2">
             <div class="mdui-typo-subheading"><strong>{web.build.terminal}</strong></div>
+            <div id="terminal"></div>
         </div>
     </div>
 </div>

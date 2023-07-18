@@ -45,6 +45,7 @@ public class ServerServlet extends HttpServlet {
         htmlMap.put("/js/dir.js", L.format(getResourcesToString("/js/dir.js")));
         htmlMap.put("/js/job.js", L.format(getResourcesToString("/js/job.js")));
         htmlMap.put("/js/edit-job.js", L.format(getResourcesToString("/js/edit-job.js")));
+        htmlMap.put("/js/build.js", L.format(getResourcesToString("/js/build.js")));
         privateUrl.add("/");
         privateUrl.add("/setting/theme");
         privateUrl.add("/setting/build");
@@ -107,13 +108,8 @@ public class ServerServlet extends HttpServlet {
                 String _path = StrUtil.removeSuffix(path.substring(6), "/" + id);
                 Project project = Project.getProject(_path);
                 if (project instanceof Job) {
-                    Job job = (Job) project;
-                    File file = new File(job.getWorkspace() + "/build/" + id);
-                    if (file.isDirectory()) {
-                        resp.setStatus(200);
-                        resp.getWriter().println(htmlMap.get("/build"));
-                        return;
-                    }
+                    resp.setStatus(200);
+                    resp.getWriter().println(htmlMap.get("/build"));
                     return;
                 }
                 resp.setStatus(404);

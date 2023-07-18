@@ -1,7 +1,10 @@
 package cc.ruok.liteci.project;
 
+import cc.ruok.liteci.config.BuildConfig;
 import cc.ruok.liteci.config.Config;
 import cc.ruok.liteci.config.JobConfig;
+import com.google.gson.Gson;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,8 +44,18 @@ public class Job extends Project {
         return workspace;
     }
 
-    public File getBuild(int id) {
+    public File getBuildDir(int id) {
         return new File(workspace + "/build/" + id);
+    }
+
+    public BuildConfig getBuild(int id) {
+        File dir = getBuildDir(id);
+        if (!dir.exists()) return null;
+        try {
+            return new Gson().fromJson(FileUtils.readFileToString(new File(dir + "/build.json"), "utf8"), BuildConfig.class);
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     public String getUUID() {

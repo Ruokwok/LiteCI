@@ -3,6 +3,7 @@ package cc.ruok.liteci.servlet;
 import cc.ruok.liteci.Build;
 import cc.ruok.liteci.BuildQueue;
 import cc.ruok.liteci.LiteCI;
+import cc.ruok.liteci.config.BuildConfig;
 import cc.ruok.liteci.config.JobConfig;
 import cc.ruok.liteci.json.*;
 import cc.ruok.liteci.project.Dir;
@@ -17,6 +18,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +33,7 @@ public class ApiServlet extends ServerServlet {
         map.put("/api/jobs", ApiServlet::getJobs);
         map.put("/api/info/job", ApiServlet::jobInfo);
         map.put("/api/queue", ApiServlet::getQueue);
+        map.put("/api/build/info", ApiServlet::buildInfo);
         map.put("/api1/setting/theme/get", ApiServlet::getTheme);
         map.put("/api1/setting/theme/set", ApiServlet::setTheme);
         map.put("/api1/create/dir", ApiServlet::createDir);
@@ -234,7 +237,7 @@ public class ApiServlet extends ServerServlet {
                 j.date = job.getConfig().last_success;
                 j.time = job.getConfig().last_time;
                 j.description = job.getDescription();
-                File build = job.getBuild(job.getConfig().success_id);
+                File build = job.getBuildDir(job.getConfig().success_id);
                 File arti = new File(build + "/artifacts");
                 if (arti.exists() && arti.isDirectory() && arti.listFiles() != null && Objects.requireNonNull(arti.listFiles()).length > 0) {
                     j.artifact = new ArrayList<>();
@@ -315,6 +318,36 @@ public class ApiServlet extends ServerServlet {
             resp.getWriter().println(json);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void buildInfo(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            Json json = new Gson().fromJson(str, Json.class);
+            Project project = Project.getProject(json.params.get("path"));
+            int id = Integer.parseInt(json.params.get("id"));
+            if (project instanceof Job) {
+                Job job = (Job) project;
+                BuildConfig build = job.getBuild(id);
+                if (build == null) {
+                    json.params.put("message", L.get("web.build.null"));
+                    resp.getWriter().println(json);
+                } else {
+                    BuildJson bj = new BuildJson();
+                    bj.params.put("message", "success");
+                    bj.name = job.getName();
+                    bj.id = id;
+                    bj.status = job.isBuilding()? 0: build.status ? 1 : 2;
+                    bj.output = FileUtils.readFileToString(new File(job.getBuildDir(id) + "/terminal.txt"), "utf8").split("\n");
+                    resp.setStatus(200);
+                    resp.getWriter().println(bj);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Json json = new Json();
+            json.params.put("message", L.get("web.build.null"));
+            resp.getWriter().println(json);
         }
     }
 }
