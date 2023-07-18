@@ -136,6 +136,8 @@ public class ServerServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getRequestURI().startsWith("/api")) {
             new ApiServlet().doPost(req, resp);
+        } else if (req.getRequestURI().startsWith("/webhook")) {
+            new WebhookServlet().doPost(req, resp);
         }
     }
 
