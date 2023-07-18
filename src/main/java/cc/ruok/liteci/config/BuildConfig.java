@@ -11,6 +11,7 @@ public class BuildConfig extends Config {
     public boolean status;
     public long date;
     public long time;
+    public int exit;
     public List<Commit> commits;
     public List<String> artifacts;
 
@@ -28,6 +29,13 @@ public class BuildConfig extends Config {
         public String hash;
         public String change;
         public String user;
+
+    }
+
+    public static class Trigger {
+
+        public int type;
+        public String content;
 
     }
 }

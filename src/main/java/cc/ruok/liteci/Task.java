@@ -78,6 +78,7 @@ public class Task implements Runnable {
             config.date = System.currentTimeMillis();
             config.time = System.currentTimeMillis() - start;
             config.id = buildId;
+            config.exit = exit;
             if (exit == 0) {
                 success(config);
             } else {
@@ -198,7 +199,7 @@ public class Task implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Logger.info(L.get("console.build.fail") + ": " + job.getName() + "(#" + build + ")");
+        Logger.info(L.get("console.build.fail") + ": " + job.getName() + "(#" + buildId + ")");
     }
 
     public Job getJob() {

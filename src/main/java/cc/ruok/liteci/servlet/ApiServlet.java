@@ -348,6 +348,7 @@ public class ApiServlet extends ServerServlet {
                         bj.output = FileUtils.readFileToString(new File(job.getBuildDir(id) + "/terminal.txt"), "utf8").split("\n");
                         bj.date = build.date;
                         bj.time = build.time;
+                        bj.exit = build.exit;
                         File file = new File(job.getBuildDir(id) + "/artifacts");
                         if (file.isDirectory()) {
                             File[] fs = file.listFiles();

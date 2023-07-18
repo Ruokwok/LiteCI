@@ -37,15 +37,18 @@ function update() {
                 mdui.mutation();
                 $('#date').text('Building...')
                 $('#time').text('Building...')
+                $('#exit').text('Building...')
             } else if (json.status == 1) {
                 $("#icon").html('<i class="mdui-icon material-icons mdui-text-color-green">check_circle</i>');
                 loop = false;
                 $('#date').html(toDate(json.date))
                 $('#time').html(toTime(json.time))
+                $('#exit').html(json.exit)
             } else if (json.status == 2) {
                 $("#icon").html('<i class="mdui-icon material-icons mdui-text-color-red">error</i>');
                 $('#date').html(toDate(json.date))
                 $('#time').html(toTime(json.time))
+                $('#exit').html(json.exit)
                 loop = false;
             }
             term.clear();
