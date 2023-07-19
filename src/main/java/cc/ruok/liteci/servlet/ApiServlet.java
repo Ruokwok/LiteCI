@@ -27,6 +27,7 @@ public class ApiServlet extends ServerServlet {
 
     public static void _init() {
         map.put("/api/login", ApiServlet::login);
+        map.put("/api/quit", ApiServlet::quit);
         map.put("/api/jobs", ApiServlet::getJobs);
         map.put("/api/info/job", ApiServlet::jobInfo);
         map.put("/api/queue", ApiServlet::getQueue);
@@ -377,5 +378,13 @@ public class ApiServlet extends ServerServlet {
             json.params.put("message", L.get("web.build.null"));
             resp.getWriter().println(json);
         }
+    }
+
+    public static void quit(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        User user = LiteCI.getOnlineUser(req.getSession().getId());
+        req.changeSessionId();
+        if (user != null) user.quit();
+        resp.setStatus(200);
+        resp.getWriter().println("{}");
     }
 }

@@ -98,3 +98,26 @@ function toTime(stamp) {
 		}
     }
 }
+
+function userinfo() {
+    if (localStorage.user == undefined) {
+        goto('/login');
+    } else {
+        mdui.dialog({
+            title: localStorage.user,
+            buttons: [
+                {
+                    text: '{web.quit}',
+                    onClick: function (inst) {
+                        post('/api/quit', undefined, function (json) {
+                            asyncGoto('/');
+                        });
+                    }
+                },
+                {
+                    text: '{web.close}',
+                }
+            ]
+        });
+    }
+}

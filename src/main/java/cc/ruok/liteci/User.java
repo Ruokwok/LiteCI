@@ -2,7 +2,9 @@ package cc.ruok.liteci;
 
 import cc.ruok.liteci.config.Config;
 import cc.ruok.liteci.config.UserConfig;
+import cc.ruok.liteci.i18n.L;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.cron.CronUtil;
 
 import java.io.IOException;
 
@@ -35,5 +37,10 @@ public class User {
 
     public void active() {
         this.active = System.currentTimeMillis();
+    }
+
+    public void quit() {
+        LiteCI.userMap.remove(session);
+        Logger.info(L.get("web.quit") + ": " + name);
     }
 }
