@@ -34,6 +34,7 @@ public class ServerServlet extends HttpServlet {
         htmlMap.put("/job/dir", L.format(Format.res("dir", html)));
         htmlMap.put("/job/job", L.format(Format.res("job", html)));
         htmlMap.put("/build", L.format(Format.res("build", html)));
+        htmlMap.put("/builds", L.format(Format.res("builds", html)));
         htmlMap.put("/edit/job", L.format(Format.res("edit-job", html)));
         htmlMap.put("/new-job", L.format(Format.res("new-job", html)));
         htmlMap.put("/login", L.format(getResourcesToString("login.html")));
@@ -46,6 +47,7 @@ public class ServerServlet extends HttpServlet {
         htmlMap.put("/js/job.js", L.format(getResourcesToString("/js/job.js")));
         htmlMap.put("/js/edit-job.js", L.format(getResourcesToString("/js/edit-job.js")));
         htmlMap.put("/js/build.js", L.format(getResourcesToString("/js/build.js")));
+        htmlMap.put("/js/builds.js", L.format(getResourcesToString("/js/builds.js")));
         privateUrl.add("/");
         privateUrl.add("/setting/theme");
         privateUrl.add("/setting/build");
