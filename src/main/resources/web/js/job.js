@@ -27,7 +27,7 @@ function update() {
             $('#artifact').append('<li>{web.none}</li>');
         } else {
             for (var i in json.artifact) {
-                $('#artifact').append('<li><a href="#">' + json.artifact[i].name + '</a><small class="mdui-m-l-2">' + json.artifact[i].size + '</small></li>');
+                $('#artifact').append('<li><a href="/download' + localStorage.path  + '/latest/' + json.artifact[i].name + '"/>' + json.artifact[i].name + '</a><small class="mdui-m-l-2">' + json.artifact[i].size + '</small></li>');
             }
         }
         $('#builds').text('');

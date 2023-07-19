@@ -70,6 +70,10 @@ public class ServerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getRequestURI();
+        if (req.getRequestURI().startsWith("/download/")) {
+            new DownloadServlet().doGet(req, resp);
+            return;
+        }
         String html = htmlMap.get(path);
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("text/html");
