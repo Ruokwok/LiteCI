@@ -32,6 +32,7 @@ function update() {
         if (json.params.message == "success") {
             $("#name").text(json.name);
             $("#id").text(json.id);
+            $("#trigger").text(getTrigger(json.trigger));
             if (json.status == 0) {
                 $('#icon').html('<div class="mdui-list-item-icon mdui-spinner"></div>');
                 mdui.mutation();
@@ -67,4 +68,16 @@ function update() {
             $("#error").show();
         }
     });
+}
+
+function getTrigger(t) {
+    if (t.type == 0) {
+        return "{web.trigger.user}(" + t.content + ")";
+    } else if (t.type == 1) {
+        return "Webhook(" + t.content + ")";
+    } else if (t.type == 2) {
+        return "CRON";
+    } else {
+        return "UnKnown";
+    }
 }

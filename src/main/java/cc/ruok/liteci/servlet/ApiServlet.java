@@ -343,12 +343,14 @@ public class ApiServlet extends ServerServlet {
                     if (task != null && task.getBuildId() == id) {
                         bj.status = 0;
                         bj.output = task.getOutput().split("\n");
+                        bj.trigger = task.getTrigger();
                     } else {
                         bj.status = build.status ? 1 : 2;
                         bj.output = FileUtils.readFileToString(new File(job.getBuildDir(id) + "/terminal.txt"), "utf8").split("\n");
                         bj.date = build.date;
                         bj.time = build.time;
                         bj.exit = build.exit;
+                        bj.trigger = build.trigger;
                         File file = new File(job.getBuildDir(id) + "/artifacts");
                         if (file.isDirectory()) {
                             File[] fs = file.listFiles();

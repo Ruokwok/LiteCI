@@ -85,6 +85,7 @@ web.build.target=构建结果
 web.build.terminal=终端输出
 web.build.null=无法找到此次构建的信息，可能已经被删除。
 web.error=错误
+web.trigger.user=用户触发
 project.path.null=目标路径不存在
 project.name.null=目标名称不正确
 project.target.exists=目标已存在
