@@ -1,5 +1,9 @@
 package cc.ruok.liteci.servlet;
 
+import cc.ruok.liteci.LiteCI;
+import cc.ruok.liteci.Logger;
+import cc.ruok.liteci.User;
+import cc.ruok.liteci.i18n.L;
 import cc.ruok.liteci.project.Job;
 import cc.ruok.liteci.project.Project;
 import jakarta.servlet.ServletException;
@@ -36,6 +40,8 @@ public class DownloadServlet extends ServerServlet {
                     resp.setHeader("content-disposition", "attachment;fileName=" + filename);
                     FileInputStream inputStream = new FileInputStream(file);
                     IOUtils.write(inputStream.readAllBytes(), resp.getOutputStream());
+                    User user = LiteCI.getOnlineUser(req.getSession().getId());
+                    Logger.info(L.get("console.download.file") + ": " + path + "#" + id + "(" + (user == null? L.get("console.download.anonymous"): user.getName()) + ")");
                 }
             }
         } catch (Exception e) {
