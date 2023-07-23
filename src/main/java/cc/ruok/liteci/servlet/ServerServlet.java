@@ -181,6 +181,7 @@ public class ServerServlet extends HttpServlet {
     }
 
     public boolean domain(HttpServletRequest req) {
+        if (LiteCI.serverConfig.domains == null || LiteCI.serverConfig.domains.isEmpty()) return true;
         return LiteCI.serverConfig.domains.contains(req.getHeader("Host"));
     }
 }

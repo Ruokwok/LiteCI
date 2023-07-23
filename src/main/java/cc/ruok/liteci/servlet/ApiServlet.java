@@ -65,8 +65,10 @@ public class ApiServlet extends HttpServlet {
     }
 
     public boolean check(String api, User user) {
+        if (api.equals("/api/login")) return true;
+        if (api.equals("/api/quit")) return true;
         if (user == null) {
-            if (api.startsWith("/api") && LiteCI.serverConfig.anonymous.get_item) return true;
+            if (api.startsWith("/api/") && LiteCI.serverConfig.anonymous.get_item) return true;
             if (api.startsWith("/api1") && LiteCI.serverConfig.anonymous.download) return true;
             if (api.startsWith("/api2") && LiteCI.serverConfig.anonymous.build) return true;
             if (api.startsWith("/api3") && LiteCI.serverConfig.anonymous.set_item) return true;
@@ -74,7 +76,7 @@ public class ApiServlet extends HttpServlet {
             if (api.startsWith("/api5") && LiteCI.serverConfig.anonymous.user) return true;
         } else {
             if (user.isAdmin()) return true;
-            if (api.startsWith("/api") && LiteCI.serverConfig.register.get_item) return true;
+            if (api.startsWith("/api/") && LiteCI.serverConfig.register.get_item) return true;
             if (api.startsWith("/api1") && LiteCI.serverConfig.register.download) return true;
             if (api.startsWith("/api2") && LiteCI.serverConfig.register.build) return true;
             if (api.startsWith("/api3") && LiteCI.serverConfig.register.set_item) return true;
@@ -432,6 +434,8 @@ public class ApiServlet extends HttpServlet {
             LiteCI.serverConfig.http_port = json.http_port;
             LiteCI.serverConfig.task_count = json.task_count;
             LiteCI.serverConfig.build_timeout = json.build_timeout;
+            if (json.domains.contains("")) json.domains.remove("");
+            if (json.domains.contains(null)) json.domains.remove(null);
             LiteCI.serverConfig.domains = json.domains;
             if (json.anonymous != null) LiteCI.serverConfig.anonymous = json.anonymous;
             if (json.register != null) LiteCI.serverConfig.register = json.register;
