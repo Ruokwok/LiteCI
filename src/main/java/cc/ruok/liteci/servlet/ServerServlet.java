@@ -75,6 +75,9 @@ public class ServerServlet extends HttpServlet {
         if (req.getRequestURI().startsWith("/download/")) {
             new DownloadServlet().doGet(req, resp);
             return;
+        } else if (req.getRequestURI().equals("/favicon.ico") || req.getRequestURI().equals("/logo.png")) {
+            icon(req, resp);
+            return;
         }
         String html = htmlMap.get(path);
         resp.setCharacterEncoding("UTF-8");
@@ -157,5 +160,20 @@ public class ServerServlet extends HttpServlet {
 
     private String redirect(String url) {
         return "<script>window.location.href = '" + url + "'</script>";
+    }
+
+    public void icon(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            resp.setStatus(200);
+            if (req.getRequestURI().equals("/favicon.ico")) {
+                InputStream inputStream = getResources("favicon.ico");
+                IOUtils.write(inputStream.readAllBytes(), resp.getOutputStream());
+            } else {
+                InputStream inputStream = getResources("logo.png");
+                IOUtils.write(inputStream.readAllBytes(), resp.getOutputStream());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

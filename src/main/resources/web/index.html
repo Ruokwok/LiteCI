@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8"/>
-    <title>Title</title>
+    <title>{config.title}</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="stylesheet" href="https://unpkg.com/mdui@1.0.2/dist/css/mdui.min.css" />
     <script src="https://unpkg.com/mdui@1.0.2/dist/js/mdui.min.js"></script>
     <script src="https://unpkg.com/jquery@3.7.0/dist/jquery.min.js"></script>
@@ -21,6 +22,10 @@
 </div>
 
 <div class="mdui-drawer" id="drawer">
+    <div class="mdui-text-center mdui-p-a-4">
+        <img src="/logo.png">
+        <div class="mdui-typo-title">{config.title}</div>
+    </div>
     <ul class="mdui-list">
         <li class="mdui-list-item mdui-ripple" onclick="goto('/')">
             <i class="mdui-list-item-icon mdui-icon material-icons">dashboard</i>
