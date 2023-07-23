@@ -7,6 +7,7 @@ import cc.ruok.liteci.i18n.L;
 import cc.ruok.liteci.project.Job;
 import cc.ruok.liteci.project.Project;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
@@ -15,7 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class DownloadServlet extends ServerServlet {
+public class DownloadServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -41,7 +42,7 @@ public class DownloadServlet extends ServerServlet {
                     FileInputStream inputStream = new FileInputStream(file);
                     IOUtils.write(inputStream.readAllBytes(), resp.getOutputStream());
                     User user = LiteCI.getOnlineUser(req.getSession().getId());
-                    Logger.info(L.get("console.download.file") + ": " + path + "#" + id + "(" + (user == null? L.get("console.download.anonymous"): user.getName()) + ")");
+                    Logger.info(L.get("console.download.file") + ": " + path + "#" + id + "(" + (user == null? L.get("console.download.anonymous"): user.getName()) + req.getRemoteAddr() + ")");
                 }
             }
         } catch (Exception e) {

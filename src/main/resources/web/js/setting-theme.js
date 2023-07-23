@@ -3,7 +3,7 @@ function update() {
 //    showLoading();
     $.ajax({
         type: 'POST',
-        url: '/api1/setting/theme/get',
+        url: '/api4/setting/theme/get',
         data: '',
         success: function (json) {
 //            closeLoading();
@@ -28,7 +28,7 @@ function save() {
         showLoading();
         $.ajax({
             type: 'POST',
-            url: '/api1/setting/theme/set',
+            url: '/api4/setting/theme/set',
             data: JSON.stringify(data),
             success: function (json) {
                 closeLoading();console.log(json)

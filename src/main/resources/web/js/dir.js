@@ -73,7 +73,7 @@ function save() {
     showLoading();
     $.ajax({
         type: 'POST',
-        url: '/api2/edit/dir',
+        url: '/api3/edit/dir',
         data: JSON.stringify(data),
         success: function (json) {
             closeLoading();
@@ -102,7 +102,7 @@ function remove() {
                     var data = {};
                     data.params = {};
                     data.params.path = window.location.pathname.substring(4).replace("%20", " ");
-                    post('/api2/remove/dir', data, function (json) {
+                    post('/api3/remove/dir', data, function (json) {
                         if (json.params.status == 'success') {
                             asyncGoto('/');
                         }

@@ -27,8 +27,9 @@ public class Build {
             conn = DriverManager.getConnection(DATABASE);
             Statement stmt = conn.createStatement();
             try {
-                stmt.execute("create table build("
+                stmt.execute("CREATE TABLE IF NOT EXISTS build("
                         + "    uuid varchar,"
+                        + "    path varchar,"
                         + "    jobid int,"
                         + "    status boolean,"
                         + "    time int,"
@@ -63,11 +64,12 @@ public class Build {
         return null;
     }
 
-    public static void addBuild(String uuid, BuildConfig config) {
+    public static void addBuild(String uuid, BuildConfig config, String name) {
         try {
             Statement stmt = conn.createStatement();
-            stmt.executeUpdate("INSERT INTO build VALUES('{uuid}',{jobid},{status},{time},{date})"
+            stmt.executeUpdate("INSERT INTO build VALUES('{uuid}','{path}',{jobid},{status},{time},{date})"
                     .replace("{uuid}", uuid)
+                            .replace("{path}", name)
                     .replace("{jobid}", String.valueOf(config.id))
                     .replace("{status}", String.valueOf(config.status))
                     .replace("{time}", String.valueOf(config.time))
@@ -82,7 +84,7 @@ public class Build {
     public static List<JobJson.Info> getBuildList(Job job) {
         try {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM build WHERE uuid='" + job.getUUID() + "' ORDER BY date DESC");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM build WHERE uuid='" + job.getUUID() + "' ORDER BY date DESC LIMIT 100;");
             ArrayList<JobJson.Info> list = new ArrayList<>();
             while (rs.next()) {
                 JobJson.Info info = new JobJson.Info();

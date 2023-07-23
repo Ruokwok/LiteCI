@@ -4,7 +4,7 @@ function edit() {
 }
 
 function build() {
-    post('/api1/build', { params: { path: localStorage.path}}, function (json) {
+    post('/api2/build', { params: { path: localStorage.path}}, function (json) {
         console.log(json)
         console.log(123)
         asyncGoto(window.location.pathname);

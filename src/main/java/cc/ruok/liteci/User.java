@@ -43,4 +43,8 @@ public class User {
         LiteCI.userMap.remove(session);
         Logger.info(L.get("web.quit") + ": " + name);
     }
+
+    public boolean isAdmin() {
+        return config.isAdmin();
+    }
 }

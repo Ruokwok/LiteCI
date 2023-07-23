@@ -1,7 +1,7 @@
 load();
 function load() {
     showLoading();
-    post('/api2/setting/server/get', undefined, function (json) {
+    post('/api4/setting/server/get', undefined, function (json) {
         console.log(json);
         closeLoading();
         $('#port').val(json.http_port);
@@ -48,7 +48,7 @@ function save() {
     data.register.download = $('#r_download').is(':checked');
     data.register.setting = $('#r_setting').is(':checked');
     data.register.user = $('#r_user').is(':checked');
-    post('/api2/setting/server/set', data, function (json) {
+    post('/api4/setting/server/set', data, function (json) {
         console.log(json);
         closeLoading
     });

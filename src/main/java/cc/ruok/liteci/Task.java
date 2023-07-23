@@ -161,7 +161,7 @@ public class Task implements Runnable {
 
     public void success(BuildConfig config) {
         config.status = true;
-        Build.addBuild(job.getUUID(), config);
+        Build.addBuild(job.getUUID(), config, job.getName());
         job.getConfig().last_success = config.date;
         job.getConfig().success_id = buildId;
         job.getConfig().last_time = config.time;
@@ -192,7 +192,7 @@ public class Task implements Runnable {
 
     public void fail(BuildConfig config) {
         config.status = false;
-        Build.addBuild(job.getUUID(), config);
+        Build.addBuild(job.getUUID(), config, job.getName());
         job.getConfig().last_fail = config.date;
         job.getConfig().status = 2;
         try {

@@ -2,7 +2,8 @@ package cc.ruok.liteci.servlet;
 
 import cc.ruok.liteci.LiteCI;
 import cc.ruok.liteci.User;
-import cc.ruok.liteci.i18n.Format;
+import cc.ruok.liteci.config.ServerConfig;
+import cc.ruok.liteci.i18n.HTML;
 import cc.ruok.liteci.i18n.L;
 import cc.ruok.liteci.project.Job;
 import cc.ruok.liteci.project.Project;
@@ -13,47 +14,37 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class ServerServlet extends HttpServlet {
 
-    private static HashMap<String, String> htmlMap = new HashMap<>();
-    private static String error = Format.language(getResourcesToString("error.html"));
-    private static List<String> privateUrl = new ArrayList<>();
+    private static HashMap<String, HTML> htmlMap = new HashMap<>();
+    private static String error = getResourcesToString("error.html");
 
     public static void _init() {
         String html = getResourcesToString("index.html");
-        htmlMap.put("/", L.format(Format.res("overview", html)));
-        htmlMap.put("/setting/theme", L.format(Format.res("setting-theme", html)));
-        htmlMap.put("/setting/server", L.format(Format.res("setting-server", html)));
-        htmlMap.put("/job/dir", L.format(Format.res("dir", html)));
-        htmlMap.put("/job/job", L.format(Format.res("job", html)));
-        htmlMap.put("/build", L.format(Format.res("build", html)));
-        htmlMap.put("/builds", L.format(Format.res("builds", html)));
-        htmlMap.put("/edit/job", L.format(Format.res("edit-job", html)));
-        htmlMap.put("/new-job", L.format(Format.res("new-job", html)));
-        htmlMap.put("/login", L.format(getResourcesToString("login.html")));
-        htmlMap.put("/js/liteci.js", L.format(getResourcesToString("/js/liteci.js")));
-        htmlMap.put("/js/overview.js", L.format(getResourcesToString("/js/overview.js")));
-        htmlMap.put("/js/setting-theme.js", L.format(getResourcesToString("/js/setting-theme.js")));
-        htmlMap.put("/js/setting-server.js", L.format(getResourcesToString("/js/setting-server.js")));
-        htmlMap.put("/js/new-job.js", L.format(getResourcesToString("/js/new-job.js")));
-        htmlMap.put("/js/dir.js", L.format(getResourcesToString("/js/dir.js")));
-        htmlMap.put("/js/job.js", L.format(getResourcesToString("/js/job.js")));
-        htmlMap.put("/js/edit-job.js", L.format(getResourcesToString("/js/edit-job.js")));
-        htmlMap.put("/js/build.js", L.format(getResourcesToString("/js/build.js")));
-        htmlMap.put("/js/builds.js", L.format(getResourcesToString("/js/builds.js")));
-        privateUrl.add("/");
-        privateUrl.add("/setting/theme");
-        privateUrl.add("/setting/server");
-        privateUrl.add("/new-job");
-        privateUrl.add("/job");
-        privateUrl.add("/edit");
-        privateUrl.add("/build");
+        htmlMap.put("/", new HTML(L.format(HTML.res("overview", html)), 0));
+        htmlMap.put("/setting/theme", new HTML(L.format(HTML.res("setting-theme", html)), 4));
+        htmlMap.put("/setting/server", new HTML(L.format(HTML.res("setting-server", html)), 4));
+        htmlMap.put("/job/dir", new HTML(L.format(HTML.res("dir", html)), 0));
+        htmlMap.put("/job/job", new HTML(L.format(HTML.res("job", html)), 0));
+        htmlMap.put("/build", new HTML(L.format(HTML.res("build", html)), 0));
+        htmlMap.put("/builds", new HTML(L.format(HTML.res("builds", html)), 0));
+        htmlMap.put("/edit/job", new HTML(L.format(HTML.res("edit-job", html)), 3));
+        htmlMap.put("/new-job", new HTML(L.format(HTML.res("new-job", html)), 3));
+        htmlMap.put("/login", new HTML(L.format(getResourcesToString("login.html")), -1));
+        htmlMap.put("/js/liteci.js", new HTML(L.format(getResourcesToString("/js/liteci.js")), -1));
+        htmlMap.put("/js/overview.js", new HTML(L.format(getResourcesToString("/js/overview.js")), 0));
+        htmlMap.put("/js/setting-theme.js", new HTML(L.format(getResourcesToString("/js/setting-theme.js")), 4));
+        htmlMap.put("/js/setting-server.js", new HTML(L.format(getResourcesToString("/js/setting-server.js")), 4));
+        htmlMap.put("/js/new-job.js", new HTML(L.format(getResourcesToString("/js/new-job.js")), 3));
+        htmlMap.put("/js/dir.js", new HTML(L.format(getResourcesToString("/js/dir.js")), 0));
+        htmlMap.put("/js/job.js", new HTML(L.format(getResourcesToString("/js/job.js")), 0));
+        htmlMap.put("/js/edit-job.js", new HTML(L.format(getResourcesToString("/js/edit-job.js")), 3));
+        htmlMap.put("/js/build.js", new HTML(L.format(getResourcesToString("/js/build.js")), 0));
+        htmlMap.put("/js/builds.js", new HTML(L.format(getResourcesToString("/js/builds.js")), 0));
     }
 
     protected static InputStream getResources(String path) {
@@ -71,73 +62,62 @@ public class ServerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getRequestURI();
+        User user = LiteCI.getOnlineUser(req.getSession().getId());
         if (!domain(req)) return;
+
         if (req.getRequestURI().startsWith("/download/")) {
-            new DownloadServlet().doGet(req, resp);
+            if (user == null && LiteCI.serverConfig.anonymous.download) {
+                new DownloadServlet().doGet(req, resp);
+            } else if (user != null && LiteCI.serverConfig.register.download) {
+                new DownloadServlet().doGet(req, resp);
+            } else if (user != null && user.isAdmin()) {
+                new DownloadServlet().doGet(req, resp);
+            }
             return;
         } else if (req.getRequestURI().equals("/favicon.ico") || req.getRequestURI().equals("/logo.png")) {
             icon(req, resp);
             return;
         }
-        String html = htmlMap.get(path);
+
+        String html = checkPermission(htmlMap.get(path), req.getSession().getId());
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("text/html");
         if (path.startsWith("/job")) {
-            if (checkPermission("/job", req.getSession().getId())) {
-                Project project = Project.getProject(path.substring(5));
-                if (project != null && project.isDir()) {
-                    String jhtml = htmlMap.get("/job/dir");
-                    resp.setStatus(200);
-                    resp.getWriter().println(jhtml);
-                } else if (project != null && !project.isDir()) {
-                    String jhtml = htmlMap.get("/job/job");
-                    resp.setStatus(200);
-                    resp.getWriter().println(jhtml);
-                }
-            } else  {
+            Project project = Project.getProject(path.substring(5));
+            if (project != null && project.isDir()) {
+                html = checkPermission(htmlMap.get("/job/dir"), req.getSession().getId());
                 resp.setStatus(200);
-                resp.getWriter().println(redirect("/login"));
+            } else if (project != null && !project.isDir()) {
+                html = checkPermission(htmlMap.get("/job/job"), req.getSession().getId());
+                resp.setStatus(200);
             }
         } else if (path.startsWith("/edit")) {
-            if (checkPermission("/edit", req.getSession().getId())) {
                 Project project = Project.getProject(path.substring(5));
                 if (project != null && !project.isDir()) {
-                    String jhtml = htmlMap.get("/edit/job");
+                    html = checkPermission(htmlMap.get("/edit/job"), req.getSession().getId());
                     resp.setStatus(200);
-                    resp.getWriter().println(jhtml);
                 }
-            } else  {
-                resp.setStatus(200);
-                resp.getWriter().println(redirect("/login"));
-            }
         } else if (path.startsWith("/build/")) {
-            if (checkPermission("/build", req.getSession().getId())) {
                 String[] split = path.split("/");
                 int id = Integer.parseInt(split[split.length - 1]);
                 String _path = StrUtil.removeSuffix(path.substring(6), "/" + id);
                 Project project = Project.getProject(_path);
                 if (project instanceof Job) {
                     resp.setStatus(200);
-                    resp.getWriter().println(htmlMap.get("/build"));
-                    return;
+                    html = checkPermission(htmlMap.get("/build"), req.getSession().getId());
+                } else {
+                    html = "";
                 }
-                resp.setStatus(404);
-                resp.getWriter().println(error);
-            } else {
-                resp.setStatus(200);
-                resp.getWriter().println(redirect("/login"));
-            }
-        } else if (checkPermission(path, req.getSession().getId())) {
-            if (html != null) {
-                resp.setStatus(200);
-                resp.getWriter().println(html);
-            } else {
-                resp.setStatus(404);
-                resp.getWriter().println(error);
-            }
+        }
+        if (html == null) {
+            resp.setStatus(200);
+            resp.getWriter().println(checkPermission(htmlMap.get("/login"), req.getSession().getId()));
+        } else if (html.isEmpty()) {
+            resp.setStatus(404);
+            resp.getWriter().println(error);
         } else {
             resp.setStatus(200);
-            resp.getWriter().println(redirect("/login"));
+            resp.getWriter().println(html);
         }
     }
 
@@ -151,12 +131,34 @@ public class ServerServlet extends HttpServlet {
         }
     }
 
-    public static boolean checkPermission(String url, String session) {
-        if (!privateUrl.contains(url)) return true;
-        User user = LiteCI.getOnlineUser(session);
-        if (user == null) return false;
-        user.active();
-        return true;
+    public static String checkPermission(HTML html, String session) {
+        if (html == null) return "";
+        try {
+            if (html.getLevel() < 0) return html.toString();
+            User user = LiteCI.getOnlineUser(session);
+            if (user == null) {
+                ServerConfig.Secure anonymous = LiteCI.serverConfig.anonymous;
+                if (html.getLevel() == 0 && anonymous.get_item) return html.toString();
+                if (html.getLevel() == 1 && anonymous.download) return html.toString();
+                if (html.getLevel() == 2 && anonymous.build) return html.toString();
+                if (html.getLevel() == 3 && anonymous.set_item) return html.toString();
+                if (html.getLevel() == 4 && anonymous.setting) return html.toString();
+                if (html.getLevel() == 5 && anonymous.user) return html.toString();
+            } else {
+                if (user.isAdmin()) return html.toString();
+                ServerConfig.Secure register = LiteCI.serverConfig.register;
+                if (html.getLevel() == 0 && register.get_item) return html.toString();
+                if (html.getLevel() == 1 && register.download) return html.toString();
+                if (html.getLevel() == 2 && register.build) return html.toString();
+                if (html.getLevel() == 3 && register.set_item) return html.toString();
+                if (html.getLevel() == 4 && register.setting) return html.toString();
+                if (html.getLevel() == 5 && register.user) return html.toString();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return null;
     }
 
     private String redirect(String url) {

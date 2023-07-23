@@ -12,7 +12,7 @@ function create() {
     data.params.path = localStorage.path;
     $.ajax({
         type: 'POST',
-        url: '/api1/create/' + t,
+        url: '/api3/create/' + t,
         data: JSON.stringify(data),
         success: function (json) {
         closeLoading();

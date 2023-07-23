@@ -13,16 +13,16 @@ import cn.hutool.crypto.SecureUtil;
 import com.github.mervick.aes_everywhere.Aes256;
 import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class ApiServlet extends ServerServlet {
+public class ApiServlet extends HttpServlet {
 
     private static HashMap<String, ApiHandler> map = new HashMap<>();
 
@@ -33,18 +33,18 @@ public class ApiServlet extends ServerServlet {
         map.put("/api/info/job", ApiServlet::jobInfo);
         map.put("/api/queue", ApiServlet::getQueue);
         map.put("/api/build/info", ApiServlet::buildInfo);
-        map.put("/api1/setting/theme/get", ApiServlet::getTheme);
-        map.put("/api1/setting/theme/set", ApiServlet::setTheme);
-        map.put("/api1/create/dir", ApiServlet::createDir);
-        map.put("/api1/create/job", ApiServlet::createJob);
-        map.put("/api1/build", ApiServlet::build);
-        map.put("/api2/edit/dir", ApiServlet::editDir);
-        map.put("/api2/edit/job", ApiServlet::editJob);
-        map.put("/api2/get/job", ApiServlet::getConfig);
-        map.put("/api2/remove/job", ApiServlet::removeJob);
-        map.put("/api2/remove/dir", ApiServlet::removeDir);
-        map.put("/api2/setting/server/get", ApiServlet::getServer);
-        map.put("/api2/setting/server/set", ApiServlet::setServer);
+        map.put("/api4/setting/theme/get", ApiServlet::getTheme);
+        map.put("/api4/setting/theme/set", ApiServlet::setTheme);
+        map.put("/api3/create/dir", ApiServlet::createDir);
+        map.put("/api3/create/job", ApiServlet::createJob);
+        map.put("/api2/build", ApiServlet::build);
+        map.put("/api3/edit/dir", ApiServlet::editDir);
+        map.put("/api3/edit/job", ApiServlet::editJob);
+        map.put("/api3/get/job", ApiServlet::getConfig);
+        map.put("/api3/remove/job", ApiServlet::removeJob);
+        map.put("/api3/remove/dir", ApiServlet::removeDir);
+        map.put("/api4/setting/server/get", ApiServlet::getServer);
+        map.put("/api4/setting/server/set", ApiServlet::setServer);
     }
 
     @Override
@@ -53,10 +53,35 @@ public class ApiServlet extends ServerServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ApiHandler handler = map.get(req.getRequestURI());
-        resp.setCharacterEncoding("UTF-8");
-        if (handler != null) handler.handler(req.getReader().readLine(), req, resp);
+        User user = LiteCI.getOnlineUser(req.getSession().getId());
+        if (check(req.getRequestURI(), user)) {
+            resp.setCharacterEncoding("UTF-8");
+            if (handler != null) handler.handler(req.getReader().readLine(), req, resp);
+        } else {
+            resp.setStatus(403);
+        }
+    }
+
+    public boolean check(String api, User user) {
+        if (user == null) {
+            if (api.startsWith("/api") && LiteCI.serverConfig.anonymous.get_item) return true;
+            if (api.startsWith("/api1") && LiteCI.serverConfig.anonymous.download) return true;
+            if (api.startsWith("/api2") && LiteCI.serverConfig.anonymous.build) return true;
+            if (api.startsWith("/api3") && LiteCI.serverConfig.anonymous.set_item) return true;
+            if (api.startsWith("/api4") && LiteCI.serverConfig.anonymous.setting) return true;
+            if (api.startsWith("/api5") && LiteCI.serverConfig.anonymous.user) return true;
+        } else {
+            if (user.isAdmin()) return true;
+            if (api.startsWith("/api") && LiteCI.serverConfig.register.get_item) return true;
+            if (api.startsWith("/api1") && LiteCI.serverConfig.register.download) return true;
+            if (api.startsWith("/api2") && LiteCI.serverConfig.register.build) return true;
+            if (api.startsWith("/api3") && LiteCI.serverConfig.register.set_item) return true;
+            if (api.startsWith("/api4") && LiteCI.serverConfig.register.setting) return true;
+            if (api.startsWith("/api5") && LiteCI.serverConfig.register.user) return true;
+        }
+        return false;
     }
 
     public static void login(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {

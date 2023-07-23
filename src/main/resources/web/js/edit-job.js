@@ -54,7 +54,7 @@ function save() {
     data.artifact = {};
     data.artifact.enable = $('#artifact').is(':checked');
     data.artifact.files = $('#artifact-file').val().trim().split('\n');
-    post('/api2/edit/job', data, function(json) {
+    post('/api3/edit/job', data, function(json) {
         console.log(json);
     });
 }
@@ -62,7 +62,7 @@ function save() {
 update();
 function update() {
 //    showLoading();
-    post('/api2/get/job', { params: { path: localStorage.path}}, function(json) {
+    post('/api3/get/job', { params: { path: localStorage.path}}, function(json) {
         console.log(json);
         $('#description').val(json.description);
         $('#webhook').prop('checked', json.webhook.enable);
@@ -107,7 +107,7 @@ function remove() {
             {
                 text: '{web.yes}',
                 onClick: function (inst) {
-                    post('/api2/remove/job', { params: { path: job}}, function(json) {
+                    post('/api3/remove/job', { params: { path: job}}, function(json) {
                         console.log(json);
                         if (json.params.status == "success") {
                             asyncGoto('/');
