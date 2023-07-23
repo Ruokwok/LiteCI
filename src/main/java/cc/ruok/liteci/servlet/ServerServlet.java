@@ -30,7 +30,7 @@ public class ServerServlet extends HttpServlet {
         String html = getResourcesToString("index.html");
         htmlMap.put("/", L.format(Format.res("overview", html)));
         htmlMap.put("/setting/theme", L.format(Format.res("setting-theme", html)));
-        htmlMap.put("/setting/build", L.format(Format.res("setting-build", html)));
+        htmlMap.put("/setting/server", L.format(Format.res("setting-server", html)));
         htmlMap.put("/job/dir", L.format(Format.res("dir", html)));
         htmlMap.put("/job/job", L.format(Format.res("job", html)));
         htmlMap.put("/build", L.format(Format.res("build", html)));
@@ -41,7 +41,7 @@ public class ServerServlet extends HttpServlet {
         htmlMap.put("/js/liteci.js", L.format(getResourcesToString("/js/liteci.js")));
         htmlMap.put("/js/overview.js", L.format(getResourcesToString("/js/overview.js")));
         htmlMap.put("/js/setting-theme.js", L.format(getResourcesToString("/js/setting-theme.js")));
-        htmlMap.put("/js/setting-build.js", L.format(getResourcesToString("/js/setting-build.js")));
+        htmlMap.put("/js/setting-server.js", L.format(getResourcesToString("/js/setting-server.js")));
         htmlMap.put("/js/new-job.js", L.format(getResourcesToString("/js/new-job.js")));
         htmlMap.put("/js/dir.js", L.format(getResourcesToString("/js/dir.js")));
         htmlMap.put("/js/job.js", L.format(getResourcesToString("/js/job.js")));
@@ -50,7 +50,7 @@ public class ServerServlet extends HttpServlet {
         htmlMap.put("/js/builds.js", L.format(getResourcesToString("/js/builds.js")));
         privateUrl.add("/");
         privateUrl.add("/setting/theme");
-        privateUrl.add("/setting/build");
+        privateUrl.add("/setting/server");
         privateUrl.add("/new-job");
         privateUrl.add("/job");
         privateUrl.add("/edit");
