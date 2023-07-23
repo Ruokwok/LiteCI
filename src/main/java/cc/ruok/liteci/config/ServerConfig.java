@@ -1,6 +1,7 @@
 package cc.ruok.liteci.config;
 
 import java.io.File;
+import java.util.List;
 
 public class ServerConfig extends Config {
 
@@ -10,7 +11,7 @@ public class ServerConfig extends Config {
     public String title = "LiteCI";
     public String theme = "indigo";
     public String accent = "pink";
-    public String[] domains;
+    public List<String> domains;
     public int task_count = 2;
     public long build_timeout = 10;
     public Secure anonymous = new Secure();

@@ -16,9 +16,8 @@ import org.apache.commons.io.IOUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class ServerServlet extends HttpServlet {
 
@@ -72,6 +71,7 @@ public class ServerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getRequestURI();
+        if (!domain(req)) return;
         if (req.getRequestURI().startsWith("/download/")) {
             new DownloadServlet().doGet(req, resp);
             return;
@@ -143,6 +143,7 @@ public class ServerServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (!domain(req)) return;
         if (req.getRequestURI().startsWith("/api")) {
             new ApiServlet().doPost(req, resp);
         } else if (req.getRequestURI().startsWith("/webhook")) {
@@ -175,5 +176,9 @@ public class ServerServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean domain(HttpServletRequest req) {
+        return LiteCI.serverConfig.domains.contains(req.getHeader("Host"));
     }
 }
