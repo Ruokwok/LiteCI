@@ -3,6 +3,7 @@ package cc.ruok.liteci.servlet;
 import cc.ruok.liteci.*;
 import cc.ruok.liteci.config.BuildConfig;
 import cc.ruok.liteci.config.JobConfig;
+import cc.ruok.liteci.config.ServerConfig;
 import cc.ruok.liteci.json.*;
 import cc.ruok.liteci.project.Dir;
 import cc.ruok.liteci.project.Job;
@@ -42,6 +43,8 @@ public class ApiServlet extends ServerServlet {
         map.put("/api2/get/job", ApiServlet::getConfig);
         map.put("/api2/remove/job", ApiServlet::removeJob);
         map.put("/api2/remove/dir", ApiServlet::removeDir);
+        map.put("/api2/setting/server/get", ApiServlet::getServer);
+        map.put("/api2/setting/server/set", ApiServlet::setServer);
     }
 
     @Override
@@ -386,5 +389,32 @@ public class ApiServlet extends ServerServlet {
         if (user != null) user.quit();
         resp.setStatus(200);
         resp.getWriter().println("{}");
+    }
+
+    public static void getServer(String str, HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            resp.setStatus(200);
+            resp.getWriter().println(new Gson().toJson(LiteCI.serverConfig));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setServer(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setStatus(200);
+        try {
+            ServerConfig json = new Gson().fromJson(str, ServerConfig.class);
+            LiteCI.serverConfig.http_port = json.http_port;
+            LiteCI.serverConfig.task_count = json.task_count;
+            LiteCI.serverConfig.build_timeout = json.build_timeout;
+            LiteCI.serverConfig.domains = json.domains;
+            if (json.anonymous != null) LiteCI.serverConfig.anonymous = json.anonymous;
+            if (json.register != null) LiteCI.serverConfig.register = json.register;
+            LiteCI.serverConfig.save();
+            resp.getWriter().println(new DialogJson(L.get("set.save.success")));
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.getWriter().println(new DialogJson(L.get("project.fail.console")));
+        }
     }
 }

@@ -1,9 +1,10 @@
 <div class="mdui-row mdui-typo mdui-p-t-4">
   <div class="mdui-col-sm-6 mdui-col-offset-sm-3">
+    <div class="mdui-typo-caption-opacity">{set.reload.tips}</div>
     <div class="mdui-card mdui-p-a-2">
       <div class="mdui-typo-title">{set.server}</div>
         <div class="mdui-textfield">
-          <label class="mdui-textfield-label">{set.server.port}</label>
+          <label class="mdui-textfield-label">{set.server.port} *</label>
           <input class="mdui-textfield-input" type="number" id="port"/>
         </div>
         <div class="mdui-textfield">
@@ -14,7 +15,7 @@
     <div class="mdui-card mdui-p-a-2 mdui-m-t-2">
       <div class="mdui-typo-title">{set.build}</div>
       <div class="mdui-textfield">
-        <label class="mdui-textfield-label">{set.build.task}</label>
+        <label class="mdui-textfield-label">{set.build.task} *</label>
         <input class="mdui-textfield-input" type="number" id="task"/>
       </div>
       <div class="mdui-textfield">
@@ -38,13 +39,13 @@
           <td>{set.secure.0}</td>
           <td>
             <label class="mdui-checkbox">
-              <input type="checkbox"/>
+              <input type="checkbox" id="a_get_item"/>
               <i class="mdui-checkbox-icon"></i>
             </label>
           </td>
           <td>
             <label class="mdui-checkbox">
-              <input type="checkbox"/>
+              <input type="checkbox" id="r_get_item"/>
               <i class="mdui-checkbox-icon"></i>
             </label>
           </td>
@@ -59,13 +60,13 @@
           <td>{set.secure.1}</td>
           <td>
             <label class="mdui-checkbox">
-              <input type="checkbox"/>
+              <input type="checkbox" id="a_download"/>
               <i class="mdui-checkbox-icon"></i>
             </label>
           </td>
           <td>
             <label class="mdui-checkbox">
-              <input type="checkbox"/>
+              <input type="checkbox" id="r_download"/>
               <i class="mdui-checkbox-icon"></i>
             </label>
           </td>
@@ -80,13 +81,13 @@
           <td>{set.secure.2}</td>
           <td>
             <label class="mdui-checkbox">
-              <input type="checkbox"/>
+              <input type="checkbox" id="a_build"/>
               <i class="mdui-checkbox-icon"></i>
             </label>
           </td>
           <td>
             <label class="mdui-checkbox">
-              <input type="checkbox"/>
+              <input type="checkbox" id="r_build"/>
               <i class="mdui-checkbox-icon"></i>
             </label>
           </td>
@@ -101,13 +102,13 @@
           <td>{set.secure.3}</td>
           <td>
             <label class="mdui-checkbox">
-              <input type="checkbox"/>
+              <input type="checkbox" id="a_set_item"/>
               <i class="mdui-checkbox-icon"></i>
             </label>
           </td>
           <td>
             <label class="mdui-checkbox">
-              <input type="checkbox"/>
+              <input type="checkbox" id="r_set_item"/>
               <i class="mdui-checkbox-icon"></i>
             </label>
           </td>
@@ -122,13 +123,13 @@
           <td>{set.secure.4}</td>
           <td>
             <label class="mdui-checkbox">
-              <input type="checkbox"/>
+              <input type="checkbox" id="a_setting"/>
               <i class="mdui-checkbox-icon"></i>
             </label>
           </td>
           <td>
             <label class="mdui-checkbox">
-              <input type="checkbox"/>
+              <input type="checkbox" id="r_setting"/>
               <i class="mdui-checkbox-icon"></i>
             </label>
           </td>
@@ -143,13 +144,13 @@
           <td>{set.secure.5}</td>
           <td>
             <label class="mdui-checkbox">
-              <input type="checkbox"/>
+              <input type="checkbox" id="a_user"/>
               <i class="mdui-checkbox-icon"></i>
             </label>
           </td>
           <td>
             <label class="mdui-checkbox">
-              <input type="checkbox"/>
+              <input type="checkbox" id="r_user"/>
               <i class="mdui-checkbox-icon"></i>
             </label>
           </td>

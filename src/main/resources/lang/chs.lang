@@ -53,6 +53,7 @@ set.secure.2=触发构建
 set.secure.3=创建及修改项目
 set.secure.4=界面及系统设置
 set.secure.5=用户设置
+set.reload.tips=提示：带*标识的选项将在LiteCI重启后生效
 web.new.job=创建新的Item
 web.job.name=名称
 web.job.type=类型

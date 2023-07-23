@@ -16,7 +16,7 @@ function showLoading(text) {
 }
 
 function closeLoading() {
-    loadingTab.close();
+    setTimeout(()=>{loadingTab.close()}, 100);
 }
 
 function goto(url) {
@@ -46,6 +46,7 @@ function post(url, data, success) {
         data: JSON.stringify(data),
         success: function (json) {
             if (json.type == 'dialog') {
+                closeLoading();
                 dialog(json.content);
             } else {
                 success(json);
