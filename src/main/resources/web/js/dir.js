@@ -8,30 +8,24 @@ function update() {
     data.params = {};
     data.params.path = window.location.pathname.substring(5);
     $('#job-list').append('<tr onclick="back()"><td><i class="mdui-icon material-icons mdui-text-color-orange">folder</i></td><td>{web.path.back}</td><td>{web.none}</td><td>{web.none}</td><td>{web.none}</td><td></td></tr>');
-    $.ajax({
-        type: 'POST',
-        url: '/api/jobs',
-        data: JSON.stringify(data),
-        success: function (json) {
-            up_path = json.father;
-            $('#name').text(json.name);
-            $('title').text('{config.title} | ' + json.name);
-            if (json.description != '' && json.description != undefined) {
-                $("#description").html(json.description);
-                $("#docs").val(json.description);
-                $("#description").show();
+    post('/api/jobs', data, function (json) {
+        up_path = json.father;
+        $('#name').text(json.name);
+        $('title').text('{config.title} | ' + json.name);
+        if (json.description != '' && json.description != undefined) {
+            $("#description").html(json.description);
+            $("#docs").val(json.description);
+            $("#description").show();
+        }
+        $("#job-loading").hide();
+        console.log(json);
+        for (i in json.list) {
+            if (json.list[i].is_dir) {
+                $('#job-list').append('<tr onclick="goto(\'' + window.location.pathname + '/' + json.list[i].name + '\')")><td>' + getIcon(json.list[i]) + '</td><td>' + json.list[i].name.replace(' ', '&nbsp;') + '</td><td>{web.none}</td><td>{web.none}</td><td>{web.none}</td><td><i class="mdui-icon material-icons">play</i></td></tr>');
+            } else {
+                $('#job-list').append('<tr onclick="goto(\'' + window.location.pathname + '/' + json.list[i].name + '\')")><td>' + getIcon(json.list[i]) + '</td><td>' + json.list[i].name.replace(' ', '&nbsp;') + '</td><td>' + json.list[i].last_success + '</td><td>' + json.list[i].last_fail + '</td><td>' + json.list[i].last_time + '</td><td><i class="mdui-icon material-icons">play</i></td></tr>');
             }
-            $("#job-loading").hide();
-            console.log(json);
-            for (i in json.list) {
-                if (json.list[i].is_dir) {
-                    $('#job-list').append('<tr onclick="goto(\'' + window.location.pathname + '/' + json.list[i].name + '\')")><td>' + getIcon(json.list[i]) + '</td><td>' + json.list[i].name.replace(' ', '&nbsp;') + '</td><td>{web.none}</td><td>{web.none}</td><td>{web.none}</td><td><i class="mdui-icon material-icons">play</i></td></tr>');
-                } else {
-                    $('#job-list').append('<tr onclick="goto(\'' + window.location.pathname + '/' + json.list[i].name + '\')")><td>' + getIcon(json.list[i]) + '</td><td>' + json.list[i].name.replace(' ', '&nbsp;') + '</td><td>' + json.list[i].last_success + '</td><td>' + json.list[i].last_fail + '</td><td>' + json.list[i].last_time + '</td><td><i class="mdui-icon material-icons">play</i></td></tr>');
-                }
-            }
-        },
-        dataType:"json",
+        }
     });
 }
 
@@ -71,20 +65,14 @@ function save() {
     data.params.path = localStorage.path;
     data.params.description = $('#docs').val();
     showLoading();
-    $.ajax({
-        type: 'POST',
-        url: '/api3/edit/dir',
-        data: JSON.stringify(data),
-        success: function (json) {
-            closeLoading();
-            $('#description').html(json.params.description);
-            $('#docs').text(json.params.description);
-            e = true;
-            $('#edit').hide();
-            $('#description').show();
-            $('#btn').text('{web.edit.description}');
-        },
-        dataType:"json",
+    post('/api3/edit/dir', data, function (json) {
+        closeLoading();
+        $('#description').html(json.params.description);
+        $('#docs').text(json.params.description);
+        e = true;
+        $('#edit').hide();
+        $('#description').show();
+        $('#btn').text('{web.edit.description}');
     });
 }
 

@@ -25,24 +25,18 @@ function save() {
     data.params.theme = $('input[name="theme"]:radio').filter(":checked").attr("id").slice(2);
     data.params.accent = $('input[name="accent"]:radio').filter(":checked").attr("id").slice(2);
     console.log(data)
-        showLoading();
-        $.ajax({
-            type: 'POST',
-            url: '/api4/setting/theme/set',
-            data: JSON.stringify(data),
-            success: function (json) {
-                closeLoading();console.log(json)
-                if (json.type == "dialog") {
-                    mdui.dialog({
-                      content: json.content,
-                      buttons: [
-                        {
-                          text: 'OK',
-                        }
-                      ]
-                    });
-                }
-            },
-            dataType:"json",
-        });
+    showLoading();
+    post('/api4/setting/theme/set', data, function (json) {
+      closeLoading();console.log(json)
+      if (json.type == "dialog") {
+          mdui.dialog({
+            content: json.content,
+            buttons: [
+              {
+                text: 'OK',
+              }
+            ]
+          });
+      }
+  });
 }

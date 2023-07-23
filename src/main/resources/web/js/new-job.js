@@ -10,26 +10,20 @@ function create() {
     data.params = {};
     data.params.name = $('#name').val();
     data.params.path = localStorage.path;
-    $.ajax({
-        type: 'POST',
-        url: '/api3/create/' + t,
-        data: JSON.stringify(data),
-        success: function (json) {
+    post('/api3/create/' + t, data, function (json) {
         closeLoading();
-            if (json.params.status == 'success') {
-                if (t == "dir") {
-                    if (localStorage.path == "/") {
-                        asyncGoto('/');
-                    } else {
-                        asyncGoto('/job' + localStorage.path);
-                    }
+        if (json.params.status == 'success') {
+            if (t == "dir") {
+                if (localStorage.path == "/") {
+                    asyncGoto('/');
                 } else {
-                    asyncGoto('/edit' + localStorage.path + (localStorage.path == '/' ? '' : '/') + data.params.name);
+                    asyncGoto('/job' + localStorage.path);
                 }
             } else {
-                dialog(json.content);
+                asyncGoto('/edit' + localStorage.path + (localStorage.path == '/' ? '' : '/') + data.params.name);
             }
-        },
-        dataType:"json",
+        } else {
+            dialog(json.content);
+        }
     });
 }
