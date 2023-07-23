@@ -110,9 +110,14 @@ function userinfo() {
                 {
                     text: '{web.quit}',
                     onClick: function (inst) {
-                        post('/api/quit', undefined, function (json) {
+                        if (localStorage.user == null) {
+                            goto('/login');
+                        } else {
+                            post('/api/quit', undefined, function (json) {
+                            localStorage.clear();
                             asyncGoto('/');
                         });
+                        }
                     }
                 },
                 {
