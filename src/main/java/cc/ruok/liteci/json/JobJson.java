@@ -1,5 +1,7 @@
 package cc.ruok.liteci.json;
 
+import cc.ruok.liteci.config.BuildConfig;
+
 import java.util.List;
 
 public class JobJson extends Json {
@@ -11,6 +13,7 @@ public class JobJson extends Json {
     public List<File> artifact;
     public List<Info> list;
     public int building;
+    public List<BuildConfig.Commit> commits;
 
     public static class File {
 

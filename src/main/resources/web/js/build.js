@@ -67,6 +67,12 @@ function update() {
             $("#card").hide();
             $("#error").show();
         }
+        if (json.commits != undefined) {
+            $('#change-card').show();
+            for (var i in json.commits) {
+                $('#change-list').append('<li>' + json.commits[i].change + ' (<a href="' + json.commits[i].url + '">' + json.commits[i].id + '</a>@' + json.commits[i].user + ')</li>');
+            }
+        }
     });
 }
 

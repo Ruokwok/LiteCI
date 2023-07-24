@@ -38,5 +38,11 @@ function update() {
         for (var i in json.list) {
             $('#builds').append('<li class="mdui-list-item mdui-ripple mdui-m-a-0" onclick="goto(\'/build' + localStorage.path + '/' + json.list[i].id + '\')"><i class="mdui-list-item-icon mdui-icon material-icons mdui-text-color-' + (json.list[i].status ? 'green':'red') + '">' + (json.list[i].status ? 'check_circle' : 'error') + '</i><div class="mdui-list-item-content"><text>#' + json.list[i].id + '</text><code class="mdui-m-l-3">' + toDate(json.list[i].date) + '</code></div></li>');
         }
+        if (json.commits != undefined) {
+            $('#change-card').show();
+            for (var i in json.commits) {
+                $('#change-list').append('<li>' + json.commits[i].change + ' (<a href="' + json.commits[i].url + '">' + json.commits[i].id + '</a>@' + json.commits[i].user + ')</li>');
+            }
+        }
     });
 }

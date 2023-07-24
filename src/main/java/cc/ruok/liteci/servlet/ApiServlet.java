@@ -280,6 +280,8 @@ public class ApiServlet extends HttpServlet {
                         j.artifact.add(f);
                     }
                 }
+                BuildConfig b = job.getBuild(job.getConfig().success_id);
+                if (b != null) j.commits = b.commits;
                 j.list = Build.getBuildList(job);
                 if (job.isBuilding()) {
                     j.building = job.getTask().getBuildId();
@@ -380,6 +382,7 @@ public class ApiServlet extends HttpServlet {
                         bj.output = task.getOutput().split("\n");
                         bj.trigger = task.getTrigger();
                     } else {
+                        bj.commits = build.commits;
                         bj.status = build.status ? 1 : 2;
                         bj.output = FileUtils.readFileToString(new File(job.getBuildDir(id) + "/terminal.txt"), "utf8").split("\n");
                         bj.date = build.date;

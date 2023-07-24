@@ -1,6 +1,7 @@
 package cc.ruok.liteci;
 
 import cc.ruok.liteci.config.BuildConfig;
+import cc.ruok.liteci.config.GithubHookshot;
 import cc.ruok.liteci.i18n.L;
 import cc.ruok.liteci.pipe.Pipeline;
 import cc.ruok.liteci.project.Job;
@@ -25,6 +26,7 @@ public class Task implements Runnable {
     private int taskId;
     private int buildId;
     private BuildConfig.Trigger trigger;
+    private List<BuildConfig.Commit> commits;
 
     private static String and;
     private static String charset;
@@ -103,6 +105,7 @@ public class Task implements Runnable {
             config.id = buildId;
             config.exit = exit;
             config.trigger = trigger;
+            config.commits = commits;
             if (exit == 0) {
                 success(config);
             } else {
@@ -112,6 +115,7 @@ public class Task implements Runnable {
             e.printStackTrace();
             output(e.getMessage());
         }
+        commits = null;
         job.setBuilding(null);
         Build.run();
     }
@@ -136,6 +140,11 @@ public class Task implements Runnable {
                 }
             }, LiteCI.serverConfig.build_timeout * 1000);
         }
+
+        commits = GithubHookshot.map.get(job.getUUID());
+        GithubHookshot.map.remove(job.getUUID());
+
+
         thread = new Thread(this);
         thread.setName("BuildTask-" + taskId);
         thread.start();

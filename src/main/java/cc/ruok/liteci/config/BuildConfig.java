@@ -27,9 +27,10 @@ public class BuildConfig extends Config {
 
     public static class Commit {
 
-        public String hash;
+        public String id;
         public String change;
         public String user;
+        public String url;
 
     }
 
