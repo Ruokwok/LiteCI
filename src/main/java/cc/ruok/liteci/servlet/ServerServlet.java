@@ -21,7 +21,7 @@ import java.util.*;
 public class ServerServlet extends HttpServlet {
 
     private static HashMap<String, HTML> htmlMap = new HashMap<>();
-    private static String error = getResourcesToString("error.html");
+    public static String error = getResourcesToString("error.html");
 
     public static void _init() {
         String html = getResourcesToString("index.html");
@@ -66,13 +66,7 @@ public class ServerServlet extends HttpServlet {
         if (!domain(req)) return;
 
         if (req.getRequestURI().startsWith("/download/")) {
-            if (user == null && LiteCI.serverConfig.anonymous.download) {
-                new DownloadServlet().doGet(req, resp);
-            } else if (user != null && LiteCI.serverConfig.register.download) {
-                new DownloadServlet().doGet(req, resp);
-            } else if (user != null && user.isAdmin()) {
-                new DownloadServlet().doGet(req, resp);
-            }
+            new DownloadServlet().doGet(req, resp);
             return;
         } else if (req.getRequestURI().equals("/favicon.ico") || req.getRequestURI().equals("/logo.png")) {
             icon(req, resp);

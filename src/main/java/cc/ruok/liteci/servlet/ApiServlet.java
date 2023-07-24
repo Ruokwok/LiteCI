@@ -29,6 +29,7 @@ public class ApiServlet extends HttpServlet {
     public static void _init() {
         map.put("/api/login", ApiServlet::login);
         map.put("/api/quit", ApiServlet::quit);
+        map.put("/api/permission", ApiServlet::permission);
         map.put("/api/jobs", ApiServlet::getJobs);
         map.put("/api/info/job", ApiServlet::jobInfo);
         map.put("/api/queue", ApiServlet::getQueue);
@@ -67,6 +68,7 @@ public class ApiServlet extends HttpServlet {
     public boolean check(String api, User user) {
         if (api.equals("/api/login")) return true;
         if (api.equals("/api/quit")) return true;
+        if (api.equals("/api/permission")) return true;
         if (user == null) {
             if (api.startsWith("/api/") && LiteCI.serverConfig.anonymous.get_item) return true;
             if (api.startsWith("/api1") && LiteCI.serverConfig.anonymous.download) return true;
@@ -444,6 +446,27 @@ public class ApiServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             resp.getWriter().println(new DialogJson(L.get("project.fail.console")));
+        }
+    }
+
+    public static void permission(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        User user = LiteCI.getOnlineUser(req.getSession().getId());
+        resp.setStatus(200);
+        if (user == null) {
+            resp.getWriter().println(new Gson().toJson(LiteCI.serverConfig.anonymous));
+        } else {
+            if (user.isAdmin()) {
+                ServerConfig.Secure secure = new ServerConfig.Secure();
+                secure.setting = true;
+                secure.get_item = true;
+                secure.user = true;
+                secure.download = true;
+                secure.build = true;
+                secure.set_item = true;
+                resp.getWriter().println(new Gson().toJson(secure));
+            } else {
+                resp.getWriter().println(new Gson().toJson(LiteCI.serverConfig.register));
+            }
         }
     }
 }

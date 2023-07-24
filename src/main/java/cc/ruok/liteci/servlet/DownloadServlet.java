@@ -19,8 +19,21 @@ import java.io.IOException;
 public class DownloadServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         try {
+            User user = LiteCI.getOnlineUser(req.getSession().getId());
+            boolean permission = true;
+            if (user == null && !LiteCI.serverConfig.anonymous.download) {
+                permission = false;
+            } else if (!LiteCI.serverConfig.register.download) {
+                permission = false;
+            }
+            if (user != null && user.isAdmin()) permission = true;
+            if (!permission) {
+                resp.setStatus(403);
+                resp.getWriter().println(ServerServlet.error);
+                return;
+            }
             String url = req.getRequestURI().replaceFirst("/download", "");
             String[] split = url.split("/");
             String filename = split[split.length - 1];
@@ -41,7 +54,6 @@ public class DownloadServlet extends HttpServlet {
                     resp.setHeader("content-disposition", "attachment;fileName=" + filename);
                     FileInputStream inputStream = new FileInputStream(file);
                     IOUtils.write(inputStream.readAllBytes(), resp.getOutputStream());
-                    User user = LiteCI.getOnlineUser(req.getSession().getId());
                     Logger.info(L.get("console.download.file") + ": " + path + "#" + id + "(" + (user == null? L.get("console.download.anonymous"): user.getName()) + req.getRemoteAddr() + ")");
                 }
             }

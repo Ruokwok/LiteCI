@@ -127,3 +127,46 @@ function userinfo() {
         });
     }
 }
+
+permission();
+function permission() {
+    post("/api/permission", undefined, function (json) {
+        console.log(json);
+        if (json.setting) {
+            var s4 = $('.liteci-secure-4');
+            for (var i = 0; i <= s4.length; i++) {
+                $(s4[i]).show();
+            }
+        }
+        if (json.get_item) {
+            var s0 = $('.liteci-secure-0');
+            for (var i = 0; i <= s0.length; i++) {
+                $(s0[i]).show();
+            }
+        }
+        if (json.download) {
+            var s1 = $('.liteci-secure-1');
+            for (var i = 0; i <= s1.length; i++) {
+                $(s1[i]).show();
+            }
+        }
+        if (json.build) {
+            var s2 = $('.liteci-secure-2');
+            for (var i = 0; i <= s2.length; i++) {
+                $(s2[i]).show();
+            }
+        }
+        if (json.set_item) {
+            var s3 = $('.liteci-secure-3');
+            for (var i = 0; i <= s3.length; i++) {
+                $(s3[i]).show();
+            }
+        }
+        if (json.user) {
+            var s5 = $('.liteci-secure-5');
+            for (var i = 0; i <= s5.length; i++) {
+                $(s5[i]).show();
+            }
+        }
+    });
+}
