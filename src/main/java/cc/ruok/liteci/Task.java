@@ -8,6 +8,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -48,6 +49,26 @@ public class Task implements Runnable {
         if (!work.exists()) work.mkdir();
         if (!build.exists()) build.mkdir();
 
+        try {
+            if (job.getConfig().check.enable) {
+                if (!job.getConfig().check.only_cron || (job.getConfig().check.enable && trigger.type == 2)) {
+                    String shell = (System.getProperty("os.name").contains("Windows") ? "cmd /C" : "") + formatShell(job.getConfig().check.shell);
+                    Pipeline pipe = new Pipeline();
+                    pipe.setCommand(shell);
+                    pipe.setPath(work);
+                    int exit = pipe.run();
+                    if (exit != 0) {
+                        Logger.info(L.get("console.check.fail") + ": " + job.getName() + "(#" + buildId + ")");
+                        job.setBuilding(null);
+                        Build.run();
+                        return;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         terminal = new File(build + "/" + buildId + "/terminal.txt");
         if (job.getConfig().artifact.enable) {
             for (String f : job.getConfig().artifact.files) {
@@ -68,7 +89,7 @@ public class Task implements Runnable {
         pipe.setHandler(this::output);
         pipe.setPath(work);
         pipe.setCharset(charset);
-        pipe.setCommand((System.getProperty("os.name").contains("Windows") ? "cmd /C" : "") + formatShell(job));
+        pipe.setCommand((System.getProperty("os.name").contains("Windows") ? "cmd /C" : "") + formatShell(job.getConfig().shell));
         try {
             int exit = pipe.run();
             timer.cancel();
@@ -143,9 +164,9 @@ public class Task implements Runnable {
         }
     }
 
-    public String formatShell(Job job) {
+    public String formatShell(List<String> cmds) {
         StringBuilder shell = new StringBuilder();
-        for (String cmd : job.getConfig().shell) {
+        for (String cmd : cmds) {
             shell.append(cmd).append(and);
         }
         return shell.toString();
