@@ -232,6 +232,7 @@ public class ApiServlet extends HttpServlet {
                 job.getConfig().artifact = json.artifact;
                 job.getConfig().shell = json.shell;
                 job.save();
+                CRON.load(job);
                 resp.getWriter().println(new DialogJson(L.get("set.save.success")));
             } else {
                 resp.getWriter().println(new DialogJson(L.get("project.target.write.fail")));

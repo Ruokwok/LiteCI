@@ -47,6 +47,7 @@ public class LiteCI {
             ApiServlet._init();
             Project.load();
             Build.init();
+            CRON.load();
         } catch (Exception e) {
             e.printStackTrace();
         }
