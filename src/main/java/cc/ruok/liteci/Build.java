@@ -33,7 +33,8 @@ public class Build {
                         + "    jobid int,"
                         + "    status boolean,"
                         + "    time int,"
-                        + "    date bigint)"
+                        + "    date bigint,"
+                        + "    trigger int)"
                         + "    ");
             } catch (Exception e) {}
             stmt.close();
@@ -67,13 +68,14 @@ public class Build {
     public static void addBuild(String uuid, BuildConfig config, String name) {
         try {
             Statement stmt = conn.createStatement();
-            stmt.executeUpdate("INSERT INTO build VALUES('{uuid}','{path}',{jobid},{status},{time},{date})"
+            stmt.executeUpdate("INSERT INTO build VALUES('{uuid}','{path}',{jobid},{status},{time},{date},{trigger})"
                     .replace("{uuid}", uuid)
                             .replace("{path}", name)
                     .replace("{jobid}", String.valueOf(config.id))
                     .replace("{status}", String.valueOf(config.status))
                     .replace("{time}", String.valueOf(config.time))
                     .replace("{date}", String.valueOf(config.date))
+                    .replace("{trigger}", String.valueOf(config.trigger.type))
             );
             stmt.close();
         } catch (SQLException e) {
@@ -103,6 +105,7 @@ public class Build {
                 info.date = rs.getLong("date");
                 info.time = rs.getInt("time");
                 info.name = rs.getString("path");
+                info.trigger = rs.getInt("trigger");
                 list.add(info);
             }
             return list;
