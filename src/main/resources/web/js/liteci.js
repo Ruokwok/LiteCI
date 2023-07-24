@@ -65,9 +65,9 @@ function toDate(stamp) {
           ? "0" + (date.getMonth() + 1)
           : date.getMonth() + 1) + "-";
       var D = (date.getDate() < 10 ? "0" + date.getDate() : date.getDate()) + "&nbsp;";
-      var h = date.getHours() + ":";
-      var m = date.getMinutes() + ":";
-      var s = date.getSeconds();
+      var h = (date.getHours() < 10? "0" + date.getHours() : date.getHours()) + ":";
+      var m = (date.getMinutes() < 10? "0" + date.getMinutes() : date.getMinutes()) + ":";
+      var s = (date.getSeconds() < 10? "0" + date.getSeconds() : date.getSeconds());
       return Y + M + D + h + m + s;
 }
 
@@ -169,4 +169,22 @@ function permission() {
             }
         }
     });
+}
+
+function formatSize(bytes) {
+    if (isNaN(bytes)) {
+        return '';
+    }
+    var symbols = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    var exp = Math.floor(Math.log(bytes)/Math.log(2));
+    if (exp < 1) {
+        exp = 0;
+    }
+    var i = Math.floor(exp / 10);
+    bytes = bytes / Math.pow(2, 10 * i);
+
+    if (bytes.toString().length > bytes.toFixed(2).toString().length) {
+        bytes = bytes.toFixed(2);
+    }
+    return bytes + ' ' + symbols[i];
 }

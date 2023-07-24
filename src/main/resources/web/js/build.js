@@ -59,7 +59,7 @@ function update() {
             if (json.artifacts != undefined && json.artifacts.length > 0) {
                 $("#artifact").text('');
                 for (var i in json.artifacts) {
-                    $("#artifact").append('<li><a href="/download' + localStorage.path  + '/latest/' + json.artifacts[i].name + '">' + json.artifacts[i].name + '</a><small class="mdui-m-l-2">' + json.artifacts[i].size + '</small></li>');
+                    $("#artifact").append('<li><a href="/download' + localStorage.path  + '/latest/' + json.artifacts[i].name + '">' + json.artifacts[i].name + '</a><small class="mdui-m-l-2">' + formatSize(json.artifacts[i].size) + '</small></li>');
                 }
             }
         } else {

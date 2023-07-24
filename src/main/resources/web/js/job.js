@@ -17,7 +17,7 @@ function update() {
         console.log(json)
         $("#b-loading").hide();
         $('#name').text(json.name);
-        $('#date').text(toDate(json.date));
+        $('#date').html(toDate(json.date));
         $('#time').html(toTime(json.time));
         if (json.description != "") {
             $('#description').html(json.description);
@@ -27,7 +27,7 @@ function update() {
             $('#artifact').append('<li>{web.none}</li>');
         } else {
             for (var i in json.artifact) {
-                $('#artifact').append('<li><a href="/download' + localStorage.path  + '/latest/' + json.artifact[i].name + '"/>' + json.artifact[i].name + '</a><small class="mdui-m-l-2">' + json.artifact[i].size + '</small></li>');
+                $('#artifact').append('<li><a href="/download' + localStorage.path  + '/latest/' + json.artifact[i].name + '"/>' + json.artifact[i].name + '</a><small class="mdui-m-l-2">' + formatSize(json.artifact[i].size) + '</small></li>');
             }
         }
         $('#builds').text('');
