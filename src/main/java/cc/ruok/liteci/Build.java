@@ -81,10 +81,20 @@ public class Build {
         }
     }
 
+    public static List<JobJson.Info> getBuildList() {
+        return getBuildList(null);
+    }
+
     public static List<JobJson.Info> getBuildList(Job job) {
         try {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM build WHERE uuid='" + job.getUUID() + "' ORDER BY date DESC LIMIT 100;");
+            String sql;
+            if (job == null) {
+                sql = "SELECT * FROM build ORDER BY date DESC LIMIT 200;";
+            } else {
+                sql = "SELECT * FROM build WHERE uuid='" + job.getUUID() + "' ORDER BY date DESC LIMIT 100;";
+            }
+            ResultSet rs = stmt.executeQuery(sql);
             ArrayList<JobJson.Info> list = new ArrayList<>();
             while (rs.next()) {
                 JobJson.Info info = new JobJson.Info();
@@ -92,6 +102,7 @@ public class Build {
                 info.status = rs.getBoolean("status");
                 info.date = rs.getLong("date");
                 info.time = rs.getInt("time");
+                info.name = rs.getString("path");
                 list.add(info);
             }
             return list;

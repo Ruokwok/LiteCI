@@ -34,6 +34,7 @@ public class ApiServlet extends HttpServlet {
         map.put("/api/info/job", ApiServlet::jobInfo);
         map.put("/api/queue", ApiServlet::getQueue);
         map.put("/api/build/info", ApiServlet::buildInfo);
+        map.put("/api/builds", ApiServlet::builds);
         map.put("/api4/setting/theme/get", ApiServlet::getTheme);
         map.put("/api4/setting/theme/set", ApiServlet::setTheme);
         map.put("/api3/create/dir", ApiServlet::createDir);
@@ -467,6 +468,16 @@ public class ApiServlet extends HttpServlet {
             } else {
                 resp.getWriter().println(new Gson().toJson(LiteCI.serverConfig.register));
             }
+        }
+    }
+
+    public static void builds(String str, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            List<JobJson.Info> list = Build.getBuildList();
+            resp.setStatus(200);
+            resp.getWriter().println(new Gson().toJson(list));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

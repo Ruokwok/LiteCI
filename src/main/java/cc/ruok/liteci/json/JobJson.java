@@ -25,6 +25,8 @@ public class JobJson extends Json {
         public boolean status;
         public long date;
         public int time;
+        public String name;
+        public int trigger = -1;
 
     }
 

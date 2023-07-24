@@ -1,5 +1,23 @@
 <div class="mdui-row mdui-typo mdui-p-t-4">
   <div class="mdui-col-sm-12 mdui-col-offset-sm-0">
-
+    <div class="mdui-typo-title"><strong>{web.build.history}</strong></div>
+    <div class="mdui-table-fluid">
+      <table class="mdui-table mdui-table-hoverable">
+        <thead>
+        <tr>
+          <th>State</th>
+          <th>ID</th>
+          <th>Item</th>
+          <th>Time</th>
+          <th>Trigger</th>
+        </tr>
+        </thead>
+        <div class="mdui-progress" id="list-loading">
+          <div class="mdui-progress-indeterminate"></div>
+        </div>
+        <tbody id="list">
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
