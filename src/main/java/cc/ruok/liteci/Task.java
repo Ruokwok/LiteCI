@@ -19,7 +19,7 @@ public class Task implements Runnable {
     private File build;
     private Pipeline pipe;
     private StringBuffer output;
-    private Timer timer = new Timer();
+    private Timer timer;
     private File terminal;
     private int taskId;
     private int buildId;
@@ -71,6 +71,7 @@ public class Task implements Runnable {
         pipe.setCommand((System.getProperty("os.name").contains("Windows") ? "cmd /C" : "") + formatShell(job));
         try {
             int exit = pipe.run();
+            timer.cancel();
             job.getConfig().length = buildId;
             job.save();
             File file = new File(build + "/" + job.getConfig().length);
@@ -106,6 +107,7 @@ public class Task implements Runnable {
         buildId = job.getConfig().length + 1;
         Logger.info(L.get("console.build.start") + ": " + job.getName() + "(#" + buildId + ")");
         if (LiteCI.serverConfig.build_timeout > 0) {
+            timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {

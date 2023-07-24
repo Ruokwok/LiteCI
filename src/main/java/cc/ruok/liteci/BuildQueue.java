@@ -15,6 +15,7 @@ public class BuildQueue {
     private static HashMap<Job, BuildConfig.Trigger> triggers = new HashMap<>();
 
     public static boolean add(Job job, BuildConfig.Trigger trigger) {
+        Build.run();
         if (queue.contains(job)) return false;
         queue.add(job);
         triggers.put(job, trigger);

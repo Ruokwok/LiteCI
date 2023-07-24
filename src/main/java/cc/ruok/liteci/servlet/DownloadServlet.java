@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
+import org.eclipse.jetty.io.EofException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,11 +53,13 @@ public class DownloadServlet extends HttpServlet {
                 if (file.exists() && file.isFile()) {
                     resp.setStatus(200);
                     resp.setHeader("content-disposition", "attachment;fileName=" + filename);
+                    resp.setHeader("Content-Length", String.valueOf(file.length()));
                     FileInputStream inputStream = new FileInputStream(file);
                     IOUtils.write(inputStream.readAllBytes(), resp.getOutputStream());
-                    Logger.info(L.get("console.download.file") + ": " + path + "#" + id + "(" + (user == null? L.get("console.download.anonymous"): user.getName()) + req.getRemoteAddr() + ")");
+                    Logger.info(L.get("console.download.file") + ": " + path + "#" + id + "/" + filename + "(" + (user == null? L.get("console.download.anonymous"): user.getName()) + "/" + req.getRemoteAddr() + ")");
                 }
             }
+        } catch (EofException e) {
         } catch (Exception e) {
             e.printStackTrace();
         }

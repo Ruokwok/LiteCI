@@ -105,6 +105,7 @@ public class Pipeline {
     }
 
     public void kill() throws IOException {
+        process.destroyForcibly();
         if (System.getProperty("os.name").contains("Windows")) {
             Runtime.getRuntime().exec("cmd /C taskkill /f /pid " + process.pid());
         } else {
