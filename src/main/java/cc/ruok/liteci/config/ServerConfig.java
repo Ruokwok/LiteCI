@@ -29,6 +29,7 @@ public class ServerConfig extends Config {
     }
 
     public static class Secure {
+        public String name;
 
         public boolean get_item;
         public boolean download;

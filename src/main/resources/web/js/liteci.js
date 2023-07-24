@@ -168,6 +168,9 @@ function permission() {
                 $(s5[i]).show();
             }
         }
+        if (json.name == undefined) {
+            localStorage.clear();
+        }
     });
 }
 

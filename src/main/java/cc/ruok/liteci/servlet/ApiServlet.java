@@ -468,6 +468,7 @@ public class ApiServlet extends HttpServlet {
                 secure.download = true;
                 secure.build = true;
                 secure.set_item = true;
+                secure.name = user.getName();
                 resp.getWriter().println(new Gson().toJson(secure));
             } else {
                 resp.getWriter().println(new Gson().toJson(LiteCI.serverConfig.register));
