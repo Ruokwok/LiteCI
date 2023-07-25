@@ -7,7 +7,7 @@ function update() {
     var data = {};
     data.params = {};
     data.params.path = window.location.pathname.substring(5);
-    $('#job-list').append('<tr onclick="back()"><td><i class="mdui-icon material-icons mdui-text-color-orange">folder</i></td><td>{web.path.back}</td><td>{web.none}</td><td>{web.none}</td><td>{web.none}</td><td></td></tr>');
+    $('#job-list').append('<tr onclick="back()"><td><i class="mdui-icon material-icons mdui-text-color-orange">folder</i></td><td nowrap>{web.path.back}</td><td>{web.none}</td><td>{web.none}</td><td>{web.none}</td></tr>');
     post('/api/jobs', data, function (json) {
         up_path = json.father;
         $('#name').text(json.name);
@@ -21,9 +21,9 @@ function update() {
         console.log(json);
         for (i in json.list) {
             if (json.list[i].is_dir) {
-                $('#job-list').append('<tr onclick="goto(\'' + window.location.pathname + '/' + json.list[i].name + '\')")><td>' + getIcon(json.list[i]) + '</td><td nowrap>' + json.list[i].name.replace(' ', '&nbsp;') + '</td><td>{web.none}</td><td>{web.none}</td><td>{web.none}</td><td><i class="mdui-icon material-icons">play</i></td></tr>');
+                $('#job-list').append('<tr onclick="goto(\'' + window.location.pathname + '/' + json.list[i].name + '\')")><td>' + getIcon(json.list[i]) + '</td><td nowrap>' + json.list[i].name.replace(' ', '&nbsp;') + '</td><td>{web.none}</td><td>{web.none}</td><td>{web.none}</td></tr>');
             } else {
-                $('#job-list').append('<tr onclick="goto(\'' + window.location.pathname + '/' + json.list[i].name + '\')")><td>' + getIcon(json.list[i]) + '</td><td>' + json.list[i].name.replace(' ', '&nbsp;') + '</td><td nowrap>' + json.list[i].last_success + '</td><td nowrap>' + json.list[i].last_fail + '</td><td nowrap>' + json.list[i].last_time + '</td><td><i class="mdui-icon material-icons">play</i></td></tr>');
+                $('#job-list').append('<tr onclick="goto(\'' + window.location.pathname + '/' + json.list[i].name + '\')")><td>' + getIcon(json.list[i]) + '</td><td>' + json.list[i].name.replace(' ', '&nbsp;') + '</td><td nowrap>' + toDate(json.list[i].last_success) + '</td><td nowrap>' + toDate(json.list[i].last_fail) + '</td><td nowrap>' + toTime(json.list[i].last_time) + '</td></tr>');
             }
         }
     });
