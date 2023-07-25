@@ -35,16 +35,16 @@ public class ServerServlet extends HttpServlet {
         htmlMap.put("/edit/job", new HTML(L.format(HTML.res("edit-job", html)), 3));
         htmlMap.put("/new-job", new HTML(L.format(HTML.res("new-job", html)), 3));
         htmlMap.put("/login", new HTML(L.format(getResourcesToString("login.html")), -1));
-        htmlMap.put("/js/liteci.js", new HTML(L.format(getResourcesToString("/js/liteci.js")), -1));
-        htmlMap.put("/js/overview.js", new HTML(L.format(getResourcesToString("/js/overview.js")), 0));
-        htmlMap.put("/js/setting-theme.js", new HTML(L.format(getResourcesToString("/js/setting-theme.js")), 4));
-        htmlMap.put("/js/setting-server.js", new HTML(L.format(getResourcesToString("/js/setting-server.js")), 4));
-        htmlMap.put("/js/new-job.js", new HTML(L.format(getResourcesToString("/js/new-job.js")), 3));
-        htmlMap.put("/js/dir.js", new HTML(L.format(getResourcesToString("/js/dir.js")), 0));
-        htmlMap.put("/js/job.js", new HTML(L.format(getResourcesToString("/js/job.js")), 0));
-        htmlMap.put("/js/edit-job.js", new HTML(L.format(getResourcesToString("/js/edit-job.js")), 3));
-        htmlMap.put("/js/build.js", new HTML(L.format(getResourcesToString("/js/build.js")), 0));
-        htmlMap.put("/js/builds.js", new HTML(L.format(getResourcesToString("/js/builds.js")), 0));
+        htmlMap.put("/js/liteci.js", new HTML(L.format(getResourcesToString("js/liteci.js")), -1));
+        htmlMap.put("/js/overview.js", new HTML(L.format(getResourcesToString("js/overview.js")), 0));
+        htmlMap.put("/js/setting-theme.js", new HTML(L.format(getResourcesToString("js/setting-theme.js")), 4));
+        htmlMap.put("/js/setting-server.js", new HTML(L.format(getResourcesToString("js/setting-server.js")), 4));
+        htmlMap.put("/js/new-job.js", new HTML(L.format(getResourcesToString("js/new-job.js")), 3));
+        htmlMap.put("/js/dir.js", new HTML(L.format(getResourcesToString("js/dir.js")), 0));
+        htmlMap.put("/js/job.js", new HTML(L.format(getResourcesToString("js/job.js")), 0));
+        htmlMap.put("/js/edit-job.js", new HTML(L.format(getResourcesToString("js/edit-job.js")), 3));
+        htmlMap.put("/js/build.js", new HTML(L.format(getResourcesToString("js/build.js")), 0));
+        htmlMap.put("/js/builds.js", new HTML(L.format(getResourcesToString("js/builds.js")), 0));
     }
 
     protected static InputStream getResources(String path) {
@@ -54,7 +54,8 @@ public class ServerServlet extends HttpServlet {
     public static String getResourcesToString(String path) {
         try {
             return IOUtils.toString(getResources(path));
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
