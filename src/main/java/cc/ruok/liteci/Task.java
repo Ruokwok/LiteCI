@@ -94,7 +94,7 @@ public class Task implements Runnable {
         pipe.setCommand((System.getProperty("os.name").contains("Windows") ? "cmd /C" : "") + formatShell(job.getConfig().shell));
         try {
             int exit = pipe.run();
-            timer.cancel();
+            if (timer != null) timer.cancel();
             job.getConfig().length = buildId;
             job.save();
             File file = new File(build + "/" + job.getConfig().length);
