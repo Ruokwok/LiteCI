@@ -25,6 +25,7 @@ public class Task implements Runnable {
     private File terminal;
     private int taskId;
     private int buildId;
+    private boolean fail;
     private BuildConfig.Trigger trigger;
     private List<BuildConfig.Commit> commits;
 
@@ -106,7 +107,9 @@ public class Task implements Runnable {
             config.exit = exit;
             config.trigger = trigger;
             config.commits = commits;
-            if (exit == 0) {
+            if (fail) {
+                fail(config);
+            } else if (exit == 0) {
                 success(config);
             } else {
                 fail(config);
@@ -168,6 +171,7 @@ public class Task implements Runnable {
 
     public void output(String str) {
         output.append("\n").append(str.trim());
+        if (str.equals("[INFO] BUILD FAILURE")) fail = true;
         try {
             FileUtils.writeStringToFile(terminal, str + "\n", true);
         } catch (IOException e) {
