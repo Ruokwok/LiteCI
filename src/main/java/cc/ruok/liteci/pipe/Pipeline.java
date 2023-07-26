@@ -74,7 +74,7 @@ public class Pipeline {
             BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream(), charset));
             String cmdout = new String();
             while ((cmdout = br.readLine()) != null) {
-                handler.printed(cmdout);
+                if (handler != null) handler.printed(cmdout);
             }
         } catch (IOException e) { }
     }
@@ -84,7 +84,7 @@ public class Pipeline {
             BufferedReader br = new BufferedReader(new InputStreamReader(process.getErrorStream(), charset));
             String cmdout = new String();
             while ((cmdout = br.readLine()) != null) {
-                handler.printed(cmdout);
+                if (handler != null) handler.printed(cmdout);
             }
         } catch (IOException e) { }
     }
