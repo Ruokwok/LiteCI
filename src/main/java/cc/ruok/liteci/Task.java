@@ -114,6 +114,8 @@ public class Task implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
             output(e.getMessage());
+            job.setBuilding(null);
+            Build.run();
         }
         commits = null;
         job.setBuilding(null);
