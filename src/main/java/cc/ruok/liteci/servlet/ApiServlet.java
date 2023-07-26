@@ -342,7 +342,8 @@ public class ApiServlet extends HttpServlet {
         Json json = new Gson().fromJson(str, Json.class);
         Project project = Project.getProject(json.params.get("path"));
         if (project instanceof Job) {
-            BuildQueue.add((Job) project, new BuildConfig.Trigger(0, LiteCI.getOnlineUser(req.getSession().getId()).getName()));
+            User user = LiteCI.getOnlineUser(req.getSession().getId());
+            BuildQueue.add((Job) project, new BuildConfig.Trigger(0, user == null ? L.get("set.secure.anonymous") : user.getName()));
         }
         resp.setStatus(200);
         resp.getWriter().println("{}");
