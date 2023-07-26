@@ -36,6 +36,7 @@ public class LiteCI {
         serverConfig = Config.loadServerConfig();
         init();
         Build.init();
+        CRON.load();
         HttpServer server = HttpServer.getInstance();
         server.start();
     }
@@ -47,7 +48,6 @@ public class LiteCI {
             ServerServlet._init();
             ApiServlet._init();
             Project.load();
-            CRON.load();
         } catch (Exception e) {
             e.printStackTrace();
         }

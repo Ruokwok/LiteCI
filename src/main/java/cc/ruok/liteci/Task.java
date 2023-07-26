@@ -208,13 +208,28 @@ public class Task implements Runnable {
             File dir = new File(build + "/" + config.id + "/artifacts");
             dir.mkdir();
             for (String f : job.getConfig().artifact.files) {
-                File file = new File(work + "/" + f);
-                if (file.exists()) {
+                if (f.contains("*")) {
                     try {
-                        FileUtils.copyFile(file, new File(dir + "/" + file.getName()));
-                    } catch (IOException e) {
-                        Logger.error(L.get("console.build.copy.artifact.fail") + ": " + f);
+                        String[] split = f.split("\\*");
+                        File folder = new File(work + "/" + split[0]);
+                        String type = split[1];
+                        for (File p : folder.listFiles())  {
+                            if (p.getName().endsWith(type)) {
+                                FileUtils.copyFile(p, new File(dir + "/" + p.getName()));
+                            }
+                        }
+                    } catch (Exception e) {
                         e.printStackTrace();
+                    }
+                } else {
+                    File file = new File(work + "/" + f);
+                    if (file.exists()) {
+                        try {
+                            FileUtils.copyFile(file, new File(dir + "/" + file.getName()));
+                        } catch (IOException e) {
+                            Logger.error(L.get("console.build.copy.artifact.fail") + ": " + f);
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
