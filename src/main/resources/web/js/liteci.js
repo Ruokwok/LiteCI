@@ -169,7 +169,8 @@ function permission() {
             }
         }
         if (json.name == undefined) {
-            localStorage.clear();
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
         }
     });
 }
