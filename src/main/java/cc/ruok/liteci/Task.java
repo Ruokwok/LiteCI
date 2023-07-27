@@ -70,6 +70,7 @@ public class Task implements Runnable {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            reset();
         }
 
         terminal = new File(build + "/" + buildId + "/terminal.txt");
@@ -284,5 +285,11 @@ public class Task implements Runnable {
                 }
             }
         }
+    }
+
+    public void reset() {
+        commits = null;
+        job.setBuilding(null);
+        Build.run();
     }
 }
