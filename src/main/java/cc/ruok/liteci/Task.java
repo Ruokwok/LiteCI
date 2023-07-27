@@ -167,6 +167,8 @@ public class Task implements Runnable {
 
     public boolean isActive() {
         if (thread == null) return false;
+        if (job == null) return false;
+        if (!job.isBuilding()) return false;
         return thread.isAlive();
     }
 
