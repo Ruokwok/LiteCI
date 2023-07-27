@@ -133,6 +133,7 @@ public class Task implements Runnable {
     }
 
     public void start() {
+        fail = false;
         job.setBuilding(this);
         buildId = job.getConfig().length + 1;
         Logger.info(L.get("console.build.start") + ": " + job.getName() + "(#" + buildId + ")");
@@ -210,6 +211,47 @@ public class Task implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        artifact(config);
+        Logger.info(L.get("console.build.success") + ": " + job.getName() + "(#" + buildId + ")");
+    }
+
+    public void fail(BuildConfig config) {
+        config.status = false;
+        Build.addBuild(job.getUUID(), config, job.getName());
+        job.getConfig().last_fail = config.date;
+        job.getConfig().status = 2;
+        try {
+            config.save();
+            job.save();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        artifact(config);
+        Logger.info(L.get("console.build.fail") + ": " + job.getName() + "(#" + buildId + ")");
+    }
+
+    public Job getJob() {
+        return job;
+    }
+
+    public int getBuildId() {
+        if (isIdle()) return 0;
+        return buildId;
+    }
+
+    public String getOutput() {
+        return output.toString();
+    }
+
+    public BuildConfig.Trigger getTrigger() {
+        return trigger;
+    }
+
+    public void setTrigger(BuildConfig.Trigger trigger) {
+        this.trigger = trigger;
+    }
+
+    public void artifact(BuildConfig config) {
         if (job.getConfig().artifact.enable) {
             File dir = new File(build + "/" + config.id + "/artifacts");
             dir.mkdir();
@@ -240,41 +282,5 @@ public class Task implements Runnable {
                 }
             }
         }
-        Logger.info(L.get("console.build.success") + ": " + job.getName() + "(#" + buildId + ")");
-    }
-
-    public void fail(BuildConfig config) {
-        config.status = false;
-        Build.addBuild(job.getUUID(), config, job.getName());
-        job.getConfig().last_fail = config.date;
-        job.getConfig().status = 2;
-        try {
-            config.save();
-            job.save();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Logger.info(L.get("console.build.fail") + ": " + job.getName() + "(#" + buildId + ")");
-    }
-
-    public Job getJob() {
-        return job;
-    }
-
-    public int getBuildId() {
-        if (isIdle()) return 0;
-        return buildId;
-    }
-
-    public String getOutput() {
-        return output.toString();
-    }
-
-    public BuildConfig.Trigger getTrigger() {
-        return trigger;
-    }
-
-    public void setTrigger(BuildConfig.Trigger trigger) {
-        this.trigger = trigger;
     }
 }
