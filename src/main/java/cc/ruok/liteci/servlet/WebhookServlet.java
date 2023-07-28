@@ -31,7 +31,7 @@ public class WebhookServlet extends ServerServlet {
             if (job.getConfig().webhook.enable) {
                 if (job.getConfig().webhook.token.equals(req.getParameter("token"))) {
                     List<BuildConfig.Commit> commits = new LinkedList<>();
-                    if (json != null) {
+                    if (json != null && json.commits != null) {
                         for (GithubHookshot.Commit commit : json.commits) {
                             BuildConfig.Commit c = new BuildConfig.Commit();
                             c.id = commit.id.substring(0, 7);
