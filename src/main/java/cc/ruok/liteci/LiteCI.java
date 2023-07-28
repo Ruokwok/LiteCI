@@ -29,6 +29,7 @@ public class LiteCI {
         if (!users.exists()) users.mkdir();
         if (!JOBS.exists()) JOBS.mkdir();
         if (!WORKSPACE.exists()) WORKSPACE.mkdir();
+        new File("ssl").mkdir();
         if (!ServerConfig.file.exists()) {
             guideServer = new GuideServer(80);
             guideServer.start();

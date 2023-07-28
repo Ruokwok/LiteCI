@@ -24,6 +24,8 @@ function load() {
         $("#r_build").attr("checked", json.register.build);
         $("#r_user").attr("checked", json.register.user);
         $("#r_setting").attr("checked", json.register.setting);
+        $("#ssl").attr("checked", json.ssl);
+        $("#ssl-pwd").val(json.keystore_password);
     });
 }
 
@@ -48,6 +50,8 @@ function save() {
     data.register.download = $('#r_download').is(':checked');
     data.register.setting = $('#r_setting').is(':checked');
     data.register.user = $('#r_user').is(':checked');
+    data.ssl = $("#ssl").is(':checked');
+    data.keystore_password = $("#ssl-pwd").val();
     post('/api4/setting/server/set', data, function (json) {
         console.log(json);
         closeLoading

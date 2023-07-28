@@ -442,6 +442,8 @@ public class ApiServlet extends HttpServlet {
             LiteCI.serverConfig.http_port = json.http_port;
             LiteCI.serverConfig.task_count = json.task_count;
             LiteCI.serverConfig.build_timeout = json.build_timeout;
+            LiteCI.serverConfig.ssl = json.ssl;
+            LiteCI.serverConfig.keystore_password = json.keystore_password;
             if (json.domains.contains("")) json.domains.remove("");
             if (json.domains.contains(null)) json.domains.remove(null);
             LiteCI.serverConfig.domains = json.domains;

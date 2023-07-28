@@ -11,6 +11,16 @@
           <label class="mdui-textfield-label">{set.server.domain}</label>
           <textarea class="mdui-textfield-input" type="text" id="domain"></textarea>
         </div>
+        <label class="mdui-switch mdui-m-t-1">
+          <text class="mdui-m-r-2">{set.ssl.enable} *</text>
+          <input type="checkbox" id="ssl"/>
+          <i class="mdui-switch-icon"></i>
+          <div class="mdui-typo-caption-opacity">{set.ssl.tips}</div>
+        </label>
+        <div class="mdui-textfield">
+          <label class="mdui-textfield-label">{set.ssl.password} *</label>
+          <input class="mdui-textfield-input" type="text" id="ssl-pwd"/>
+        </div>
     </div>
     <div class="mdui-card mdui-p-a-2 mdui-m-t-2">
       <div class="mdui-typo-title">{set.build}</div>

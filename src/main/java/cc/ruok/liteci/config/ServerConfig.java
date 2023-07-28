@@ -14,6 +14,8 @@ public class ServerConfig extends Config {
     public HashSet<String> domains;
     public int task_count = 2;
     public long build_timeout = 10;
+    public boolean ssl;
+    public String keystore_password;
     public Secure anonymous = new Secure();
     public Secure register = new Secure();
 
