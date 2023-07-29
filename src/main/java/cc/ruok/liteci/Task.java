@@ -133,7 +133,7 @@ public class Task implements Runnable {
         this.build = new File(job.getWorkspace() + "/build");
     }
 
-    public void start() {
+    public synchronized void start() {
         fail = false;
         job.setBuilding(this);
         buildId = job.getConfig().length + 1;

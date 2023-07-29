@@ -46,7 +46,7 @@ public class Build {
         }
     }
 
-    public static void run() {
+    public static synchronized void run() {
         if (BuildQueue.isEmpty()) return;
         Task task = getIdleTask();
         if (task == null) return;
