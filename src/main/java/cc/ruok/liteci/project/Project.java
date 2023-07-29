@@ -140,7 +140,7 @@ public abstract class Project {
         Dir up = job.getUp();
         up.getSons().remove(job.name);
         FileUtils.delete(job.getFile());
-        FileUtils.delete(job.getWorkspace());
+        FileUtils.deleteDirectory(job.getWorkspace());
         Runtime.getRuntime().gc();
         try {
             Build.execute("DELETE FROM build WHERE uuid='" + job.getUUID() + "';");
