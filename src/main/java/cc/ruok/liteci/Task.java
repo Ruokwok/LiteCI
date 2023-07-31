@@ -58,6 +58,7 @@ public class Task implements Runnable {
                     String shell = (System.getProperty("os.name").contains("Windows") ? "cmd /C" : "") + formatShell(job.getConfig().check.shell);
                     Pipeline pipe = new Pipeline();
                     pipe.setCommand(shell);
+                    pipe.setHandler(this::output);
                     pipe.setPath(work);
                     int exit = pipe.run();
                     if (exit != 0) {
@@ -89,7 +90,6 @@ public class Task implements Runnable {
         }
 
         pipe = new Pipeline();
-        output = new StringBuffer();
         pipe.setHandler(this::output);
         pipe.setPath(work);
         pipe.setCharset(charset);
@@ -151,7 +151,7 @@ public class Task implements Runnable {
         commits = GithubHookshot.map.get(job.getUUID());
         GithubHookshot.map.remove(job.getUUID());
 
-
+        output = new StringBuffer();
         thread = new Thread(this);
         thread.setName("BuildTask-" + taskId);
         thread.start();
