@@ -3,6 +3,7 @@ package cc.ruok.liteci;
 import cc.ruok.liteci.config.BuildConfig;
 import cc.ruok.liteci.config.GithubHookshot;
 import cc.ruok.liteci.i18n.L;
+import cc.ruok.liteci.pipe.Handler;
 import cc.ruok.liteci.pipe.Pipeline;
 import cc.ruok.liteci.project.Job;
 import org.apache.commons.io.FileUtils;
@@ -21,6 +22,7 @@ public class Task implements Runnable {
     private File build;
     private Pipeline pipe;
     private StringBuffer output;
+    private StringBuffer checkOutput;
     private Timer timer;
     private File terminal;
     private int taskId;
@@ -57,8 +59,14 @@ public class Task implements Runnable {
                 if (!job.getConfig().check.only_cron || (job.getConfig().check.enable && trigger.type == 2)) {
                     String shell = (System.getProperty("os.name").contains("Windows") ? "cmd /C" : "") + formatShell(job.getConfig().check.shell);
                     Pipeline pipe = new Pipeline();
+                    checkOutput = new StringBuffer();
                     pipe.setCommand(shell);
-                    pipe.setHandler(this::output);
+                    pipe.setHandler(new Handler() {
+                        @Override
+                        public void printed(String str) {
+                            checkOutput.append("\n").append(str);
+                        }
+                    });
                     pipe.setPath(work);
                     int exit = pipe.run();
                     if (exit != 0) {
@@ -174,9 +182,13 @@ public class Task implements Runnable {
     }
 
     public void output(String str) {
-        output.append("\n").append(str.trim());
-        if (str.equals("[INFO] BUILD FAILURE")) fail = true;
         try {
+            if (checkOutput != null) {
+                FileUtils.writeStringToFile(terminal, checkOutput + "\n", true);
+                checkOutput = null;
+            }
+            output.append("\n").append(str.trim());
+            if (str.equals("[INFO] BUILD FAILURE")) fail = true;
             FileUtils.writeStringToFile(terminal, str + "\n", true);
         } catch (IOException e) {
             e.printStackTrace();
